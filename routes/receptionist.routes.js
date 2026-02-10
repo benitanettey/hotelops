@@ -1,0 +1,1 @@
+//dashboard,check-in,rooms,cleaning requests
