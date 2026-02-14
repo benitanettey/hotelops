@@ -20,3 +20,7 @@ Thumbs.db
 # Optional build output (if you ever add it)
 dist/
 build/
+
+# Tailwind CSS build output
+public/css/styles.css
+public/css/styles.css.map
