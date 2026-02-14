@@ -1,0 +1,325 @@
+<!-- 
+  GUEST CHECK-IN PAGE
+  This page allows receptionists to check in guests and assign them to available rooms.
+  
+  BACKEND TODO:
+  - Pass availableRooms array with room numbers and types from controller
+  - Handle POST request from check-in form to create new guest entry
+  - Validate all form fields before submission
+  - Assign selected room to guest and update room status to 'Occupied'
+  - Create guest record in guests.json with all form data
+  - Redirect to dashboard or show success message after check-in
+  
+  FORM FIELDS:
+  - firstName: Guest's first name
+  - lastName: Guest's last name
+  - email: Guest's email address
+  - phone: Guest's phone number
+  - idNumber: Guest's ID/passport number
+  - checkInDate: Check-in date
+  - checkOutDate: Expected check-out date
+  - roomSelect: Selected room number (dropdown populated from availableRooms)
+-->
+
+<div class="min-h-screen bg-gray-50">
+  <!-- Sticky Header/Navigation -->
+  <header class="bg-white shadow-sm sticky top-0 z-50">
+    <div class="container mx-auto px-6">
+      <div class="flex items-center justify-between h-16">
+        <!-- Logo and Brand -->
+        <div class="flex items-center gap-3">
+          <div class="bg-[#008080] text-white p-2 rounded-lg">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+            </svg>
+          </div>
+          <h1 class="text-xl font-bold text-gray-800">StaySync</h1>
+        </div>
+        
+        <!-- Navigation Links -->
+        <nav>
+          <ul class="flex items-center gap-8">
+            <li>
+              <a href="/receptionist/dashboard" class="text-sm font-medium text-gray-600 hover:text-[#008080] transition">
+                Dashboard
+              </a>
+            </li>
+            <li>
+              <a href="/receptionist/checkingguests" class="text-sm font-medium text-gray-900 hover:text-[#008080] transition">
+                Check-In
+              </a>
+            </li>
+            <li>
+              <a href="/receptionist/checkoutguests" class="text-sm font-medium text-gray-600 hover:text-[#008080] transition">
+                Checkout
+              </a>
+            </li>
+            <li>
+              <a href="/receptionist/rooms" class="text-sm font-medium text-gray-600 hover:text-[#008080] transition">
+                Rooms
+              </a>
+            </li>
+            <li>
+              <a href="/receptionist/cleaning-requests" class="text-sm font-medium text-gray-600 hover:text-[#008080] transition">
+                Cleaning Requests
+              </a>
+            </li>
+            <li>
+              <a href="/receptionist/housekeepers" class="text-sm font-medium text-gray-600 hover:text-[#008080] transition">
+                Housekeepers
+              </a>
+            </li>
+            
+            <!-- Notification Icon -->
+            <li>
+              <button class="relative p-2 text-gray-600 hover:text-[#008080] transition">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+                </svg>
+              </button>
+            </li>
+            
+            <!-- User Profile -->
+            <li>
+              <button class="flex items-center gap-2 text-gray-600 hover:text-[#008080] transition">
+                <div class="w-8 h-8 bg-[#008080] rounded-full flex items-center justify-center text-white text-sm font-medium">
+                  R
+                </div>
+              </button>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="container mx-auto px-4 py-8">
+    <!-- Page Header -->
+    <div class="mb-6">
+      <h2 class="text-2xl font-bold text-gray-800 mb-2">Guest Check-In</h2>
+      <p class="text-gray-600">Register a new guest and assign a room</p>
+    </div>
+
+    <!-- Hero Section with Text Overlay -->
+    <section class="relative bg-gray-900 rounded-lg mb-8 overflow-hidden h-64">
+      <img 
+        src="/images/hotel-room.jpg" 
+        alt="Premium Hotel Room" 
+        class="absolute inset-0 w-full h-full object-cover opacity-70"
+      >
+      <div class="relative z-10 h-full flex items-center px-12">
+        <div>
+          <h3 class="text-3xl font-bold text-white mb-2">Premium Accommodations</h3>
+          <p class="text-white text-lg">Find the perfect room for your guests</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Guest Information and Available Rooms Side by Side -->
+    <div class="grid grid-cols-1 lg:grid-cols-5 gap-8">
+      <!-- Check-In Form - Takes 3 columns (60%) -->
+      <section class="bg-white rounded-lg shadow-sm p-8 lg:col-span-3">
+        <h3 class="text-xl font-semibold text-gray-800 mb-6">Guest Information</h3>
+        
+        <!-- BACKEND TODO: Form action should POST to /receptionist/checkin -->
+        <form method="POST" action="/receptionist/checkin" class="space-y-6">
+          <!-- Name Fields -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label for="firstName" class="block text-sm font-medium text-gray-700 mb-2">
+                First Name
+              </label>
+              <input 
+                type="text" 
+                id="firstName" 
+                name="firstName" 
+                required
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#008080] focus:border-transparent bg-gray-50"
+                placeholder=""
+              >
+            </div>
+            
+            <div>
+              <label for="lastName" class="block text-sm font-medium text-gray-700 mb-2">
+                Last Name
+              </label>
+              <input 
+                type="text" 
+                id="lastName" 
+                name="lastName" 
+                required
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#008080] focus:border-transparent bg-gray-50"
+                placeholder=""
+              >
+            </div>
+          </div>
+
+          <!-- Contact Fields -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
+                Email
+              </label>
+              <input 
+                type="email" 
+                id="email" 
+                name="email" 
+                required
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#008080] focus:border-transparent bg-gray-50"
+                placeholder=""
+              >
+            </div>
+            
+            <div>
+              <label for="phone" class="block text-sm font-medium text-gray-700 mb-2">
+                Phone Number
+              </label>
+              <input 
+                type="tel" 
+                id="phone" 
+                name="phone" 
+                required
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#008080] focus:border-transparent bg-gray-50"
+                placeholder=""
+              >
+            </div>
+          </div>
+
+          <!-- ID Number -->
+          <div>
+            <label for="idNumber" class="block text-sm font-medium text-gray-700 mb-2">
+              ID Number
+            </label>
+            <input 
+              type="text" 
+              id="idNumber" 
+              name="idNumber" 
+              required
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#008080] focus:border-transparent bg-gray-50"
+              placeholder=""
+            >
+          </div>
+
+          <!-- Date Fields -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label for="checkInDate" class="block text-sm font-medium text-gray-700 mb-2">
+                Check-In Date
+              </label>
+              <input 
+                type="date" 
+                id="checkInDate" 
+                name="checkInDate" 
+                required
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#008080] focus:border-transparent bg-gray-50"
+              >
+            </div>
+            
+            <div>
+              <label for="checkOutDate" class="block text-sm font-medium text-gray-700 mb-2">
+                Check-Out Date
+              </label>
+              <input 
+                type="date" 
+                id="checkOutDate" 
+                name="checkOutDate" 
+                required
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#008080] focus:border-transparent bg-gray-50"
+                placeholder="mm/dd/yyyy"
+              >
+            </div>
+          </div>
+
+          <!-- Room Selection -->
+          <div>
+            <label for="roomSelect" class="block text-sm font-medium text-gray-700 mb-2">
+              Select Room
+            </label>
+            <select 
+              id="roomSelect" 
+              name="roomSelect" 
+              required
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#008080] focus:border-transparent bg-gray-50"
+            >
+              <option value="">Choose a room</option>
+              <!-- BACKEND TODO: Populate options from {{availableRooms}} array -->
+              <!-- Example: {{#each availableRooms}} -->
+              <option value="101">Room 101</option>
+              <option value="102">Room 102</option>
+              <option value="103">Room 103</option>
+              <!-- {{/each}} -->
+            </select>
+          </div>
+
+          <!-- Submit Button -->
+          <div class="pt-4">
+            <button 
+              type="submit"
+              class="w-full bg-[#008080] text-white px-8 py-3 rounded-lg hover:bg-teal-700 transition font-medium"
+            >
+              Check In Guest
+            </button>
+          </div>
+        </form>
+      </section>
+
+      <!-- Available Rooms List - Takes 2 columns (40%) -->
+      <section class="bg-white rounded-lg shadow-sm p-8 lg:col-span-2">
+        <h3 class="text-xl font-semibold text-gray-800 mb-6">Available Rooms</h3>
+        
+        <!-- BACKEND TODO: Loop through {{availableRooms}} array -->
+        <div class="space-y-3">
+          <!-- Room Item -->
+          <div class="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:border-[#008080] transition">
+            <div>
+              <p class="font-semibold text-gray-800">Room 101</p>
+              <p class="text-sm text-gray-500">Single</p>
+            </div>
+            <span class="text-sm text-gray-400">Floor 1</span>
+          </div>
+
+          <div class="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:border-[#008080] transition">
+            <div>
+              <p class="font-semibold text-gray-800">Room 102</p>
+              <p class="text-sm text-gray-500">Single</p>
+            </div>
+            <span class="text-sm text-gray-400">Floor 1</span>
+          </div>
+
+          <div class="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:border-[#008080] transition">
+            <div>
+              <p class="font-semibold text-gray-800">Room 201</p>
+              <p class="text-sm text-gray-500">Double</p>
+            </div>
+            <span class="text-sm text-gray-400">Floor 2</span>
+          </div>
+
+          <div class="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:border-[#008080] transition">
+            <div>
+              <p class="font-semibold text-gray-800">Room 202</p>
+              <p class="text-sm text-gray-500">Double</p>
+            </div>
+            <span class="text-sm text-gray-400">Floor 2</span>
+          </div>
+
+          <div class="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:border-[#008080] transition">
+            <div>
+              <p class="font-semibold text-gray-800">Room 301</p>
+              <p class="text-sm text-gray-500">Suite</p>
+            </div>
+            <span class="text-sm text-gray-400">Floor 3</span>
+          </div>
+
+          <div class="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:border-[#008080] transition">
+            <div>
+              <p class="font-semibold text-gray-800">Room 302</p>
+              <p class="text-sm text-gray-500">Suite</p>
+            </div>
+            <span class="text-sm text-gray-400">Floor 3</span>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+</div>

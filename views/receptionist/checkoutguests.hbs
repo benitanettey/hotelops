@@ -1,0 +1,315 @@
+<!-- 
+  GUEST CHECKOUT PAGE
+  This page displays all currently checked-in guests and allows receptionist to process checkouts.
+  
+  BACKEND TODO:
+  - Pass occupiedRooms array from controller with guest and room details
+  - Each occupiedRooms item should contain:
+    * roomNumber
+    * guestName
+    * roomType (Single, Double, Suite, etc.)
+    * checkInDate
+    * expectedCheckOutDate
+    * amountDue
+    * guestId
+  - Handle POST request to /receptionist/checkout/:guestId
+  - Update room status from 'Occupied' to 'Needs Cleaning' 
+  - Update guest record with actual checkout date
+  - Create cleaning task for the room in cleaningTasks.json
+  - Calculate and process final amount (if payment processing is added later)
+  - Redirect back to checkout page or dashboard with success message
+  
+  SEARCH FUNCTIONALITY TODO:
+  - Implement client-side or server-side search to filter table by guest name or room number
+-->
+
+<div class="min-h-screen bg-gray-50">
+  <!-- Sticky Header/Navigation -->
+  <header class="bg-white shadow-sm sticky top-0 z-50">
+    <div class="container mx-auto px-6">
+      <div class="flex items-center justify-between h-16">
+        <!-- Logo and Brand -->
+        <div class="flex items-center gap-3">
+          <div class="bg-[#008080] text-white p-2 rounded-lg">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+            </svg>
+          </div>
+          <h1 class="text-xl font-bold text-gray-800">StaySync</h1>
+        </div>
+        
+        <!-- Navigation Links -->
+        <nav>
+          <ul class="flex items-center gap-8">
+            <li>
+              <a href="/receptionist/dashboard" class="text-sm font-medium text-gray-600 hover:text-[#008080] transition">
+                Dashboard
+              </a>
+            </li>
+            <li>
+              <a href="/receptionist/checkingguests" class="text-sm font-medium text-gray-600 hover:text-[#008080] transition">
+                Check-In
+              </a>
+            </li>
+            <li>
+              <a href="/receptionist/checkoutguests" class="text-sm font-medium text-gray-900 hover:text-[#008080] transition">
+                Checkout
+              </a>
+            </li>
+            <li>
+              <a href="/receptionist/rooms" class="text-sm font-medium text-gray-600 hover:text-[#008080] transition">
+                Rooms
+              </a>
+            </li>
+            <li>
+              <a href="/receptionist/cleaning-requests" class="text-sm font-medium text-gray-600 hover:text-[#008080] transition">
+                Cleaning Requests
+              </a>
+            </li>
+            <li>
+              <a href="/receptionist/housekeepers" class="text-sm font-medium text-gray-600 hover:text-[#008080] transition">
+                Housekeepers
+              </a>
+            </li>
+            
+            <!-- Notification Icon -->
+            <li>
+              <button class="relative p-2 text-gray-600 hover:text-[#008080] transition">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+                </svg>
+              </button>
+            </li>
+            
+            <!-- User Profile -->
+            <li>
+              <button class="flex items-center gap-2 text-gray-600 hover:text-[#008080] transition">
+                <div class="w-8 h-8 bg-[#008080] rounded-full flex items-center justify-center text-white text-sm font-medium">
+                  R
+                </div>
+              </button>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="container mx-auto px-4 py-8 max-w-7xl">
+    <!-- Page Header -->
+    <div class="mb-6">
+      <h2 class="text-2xl font-bold text-gray-800 mb-2">Guest Checkout</h2>
+      <p class="text-gray-600">Process payments and release rooms</p>
+    </div>
+
+    <!-- Hero Section with Gradient Fade -->
+    <section class="relative rounded-lg p-8 mb-8 overflow-hidden">
+      <!-- Gradient background that fades from teal to transparent -->
+      <div class="absolute inset-0 bg-gradient-to-r from-[#008080] via-[#20b2aa] to-transparent"></div>
+      
+      <div class="relative z-10">
+        <h3 class="text-2xl font-bold text-white mb-2">Seamless Departures</h3>
+        <p class="text-white">Ensure a smooth experience until the very end</p>
+      </div>
+    </section>
+
+    <!-- Occupied Rooms Section -->
+    <section class="bg-white rounded-lg shadow-sm overflow-hidden">
+      <div class="p-6 border-b border-gray-200">
+        <div class="flex items-center justify-between">
+          <div>
+            <h3 class="text-xl font-semibold text-gray-800">Occupied Rooms</h3>
+            <p class="text-sm text-gray-600 mt-1">Guests currently checked in</p>
+          </div>
+          
+          <!-- Search Input -->
+          <div class="relative">
+            <input 
+              type="text" 
+              id="searchInput"
+              placeholder="Search guest or room..." 
+              class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#008080] focus:border-transparent"
+            >
+            <svg class="w-5 h-5 text-gray-400 absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Table -->
+      <div class="overflow-x-auto">
+        <table class="w-full">
+          <thead class="bg-gray-50 border-b border-gray-200">
+            <tr>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Room
+              </th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Guest Name
+              </th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Type
+              </th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Check-In
+              </th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Expected Check-Out
+              </th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Action
+              </th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <!-- BACKEND TODO: Loop through {{occupiedRooms}} array -->
+            <!-- Example: {{#each occupiedRooms}} -->
+            
+            <!-- Row 1 -->
+            <tr class="hover:bg-gray-50 transition">
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                102
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                John Smith
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                Single
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                2026-02-05
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                2026-02-08
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm">
+                <!-- BACKEND TODO: Form should POST to /receptionist/checkout with guestId -->
+                <form method="POST" action="/receptionist/checkout" class="inline">
+                  <input type="hidden" name="guestId" value="guest-001">
+                  <input type="hidden" name="roomNumber" value="102">
+                  <button 
+                    type="submit"
+                    class="bg-[#008080] text-white px-4 py-2 rounded-lg hover:bg-teal-700 transition inline-flex items-center gap-2"
+                  >
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                    </svg>
+                    Checkout
+                  </button>
+                </form>
+              </td>
+            </tr>
+
+            <!-- Row 2 -->
+            <tr class="hover:bg-gray-50 transition">
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                202
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                Jane Doe
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                Double
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                2026-02-04
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                2026-02-08
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm">
+                <form method="POST" action="/receptionist/checkout" class="inline">
+                  <input type="hidden" name="guestId" value="guest-002">
+                  <input type="hidden" name="roomNumber" value="202">
+                  <button 
+                    type="submit"
+                    class="bg-[#008080] text-white px-4 py-2 rounded-lg hover:bg-teal-700 transition inline-flex items-center gap-2"
+                  >
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                    </svg>
+                    Checkout
+                  </button>
+                </form>
+              </td>
+            </tr>
+
+            <!-- Row 3 -->
+            <tr class="hover:bg-gray-50 transition">
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                303
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                Bob Johnson
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                Suite
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                2026-02-06
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                2026-02-09
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm">
+                <form method="POST" action="/receptionist/checkout" class="inline">
+                  <input type="hidden" name="guestId" value="guest-003">
+                  <input type="hidden" name="roomNumber" value="303">
+                  <button 
+                    type="submit"
+                    class="bg-[#008080] text-white px-4 py-2 rounded-lg hover:bg-teal-700 transition inline-flex items-center gap-2"
+                  >
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                    </svg>
+                    Checkout
+                  </button>
+                </form>
+              </td>
+            </tr>
+
+            <!-- {{/each}} -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Empty State (show when no occupied rooms) -->
+      <!-- BACKEND TODO: Show this when occupiedRooms array is empty -->
+      <!-- {{#unless occupiedRooms.length}} -->
+      <!--
+      <div class="p-12 text-center">
+        <svg class="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+        </svg>
+        <h4 class="text-lg font-medium text-gray-900 mb-1">No Occupied Rooms</h4>
+        <p class="text-sm text-gray-500">All rooms are currently available</p>
+      </div>
+      -->
+      <!-- {{/unless}} -->
+    </section>
+  </main>
+</div>
+
+<!-- BACKEND TODO: Optional - Add JavaScript for client-side search filtering -->
+<!--
+<script>
+  // Client-side search functionality
+  document.getElementById('searchInput').addEventListener('input', function(e) {
+    const searchTerm = e.target.value.toLowerCase();
+    const rows = document.querySelectorAll('tbody tr');
+    
+    rows.forEach(row => {
+      const guestName = row.cells[1].textContent.toLowerCase();
+      const roomNumber = row.cells[0].textContent.toLowerCase();
+      
+      if (guestName.includes(searchTerm) || roomNumber.includes(searchTerm)) {
+        row.style.display = '';
+      } else {
+        row.style.display = 'none';
+      }
+    });
+  });
+</script>
+-->

@@ -1,0 +1,318 @@
+<!-- 
+  RECEPTIONIST DASHBOARD PAGE
+  This page displays an overview of hotel operations including room statistics,
+  occupancy trends, recent activity, and property highlights.
+  
+  BACKEND TODO:
+  - Pass totalRooms, roomsReady, pendingCleaning, occupied counts from controller
+  - Pass occupancyData array for chart (monthly data with dates and values)
+  - Pass recentActivity array with activity items (type, description, timestamp)
+  - Pass propertyImages array for "Our Property" section
+-->
+
+<div class="min-h-screen bg-gray-50">
+  <!-- Sticky Header/Navigation -->
+  <header class="bg-white shadow-sm sticky top-0 z-50">
+    <div class="container mx-auto px-6">
+      <div class="flex items-center justify-between h-16">
+        <!-- Logo and Brand -->
+        <div class="flex items-center gap-3">
+          <div class="bg-[#008080] text-white p-2 rounded-lg">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+            </svg>
+          </div>
+          <h1 class="text-xl font-bold text-gray-800">StaySync</h1>
+        </div>
+        
+        <!-- Navigation Links -->
+        <nav>
+          <ul class="flex items-center gap-8">
+            <li>
+              <a href="/receptionist/dashboard" class="text-sm font-medium text-gray-900 hover:text-[#008080] transition">
+                Dashboard
+              </a>
+            </li>
+            <li>
+              <a href="/receptionist/checkingguests" class="text-sm font-medium text-gray-600 hover:text-[#008080] transition">
+                Check-In
+              </a>
+            </li>
+            <li>
+              <a href="/receptionist/checkoutguests" class="text-sm font-medium text-gray-600 hover:text-[#008080] transition">
+                Checkout
+              </a>
+            </li>
+            <li>
+              <a href="/receptionist/rooms" class="text-sm font-medium text-gray-600 hover:text-[#008080] transition">
+                Rooms
+              </a>
+            </li>
+            <li>
+              <a href="/receptionist/cleaning-requests" class="text-sm font-medium text-gray-600 hover:text-[#008080] transition">
+                Cleaning Requests
+              </a>
+            </li>
+            <li>
+              <a href="/receptionist/housekeepers" class="text-sm font-medium text-gray-600 hover:text-[#008080] transition">
+                Housekeepers
+              </a>
+            </li>
+            
+            <!-- Notification Icon -->
+            <li>
+              <button class="relative p-2 text-gray-600 hover:text-[#008080] transition">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+                </svg>
+              </button>
+            </li>
+            
+            <!-- User Profile -->
+            <li>
+              <button class="flex items-center gap-2 text-gray-600 hover:text-[#008080] transition">
+                <div class="w-8 h-8 bg-[#008080] rounded-full flex items-center justify-center text-white text-sm font-medium">
+                  R
+                </div>
+              </button>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="container mx-auto px-4 py-8">
+    <!-- Welcome Section -->
+    <section class="bg-white rounded-lg shadow-sm mb-6 overflow-hidden">
+      <div class="flex items-stretch">
+        <div class="p-8 flex-1">
+          <h2 class="text-2xl font-bold text-gray-800 mb-2">Welcome to StaySync</h2>
+          <p class="text-gray-600 mb-6">Manage your hotel operations efficiently. Quick access to check-ins, room management, and housekeeping coordination.</p>
+          
+          <div class="flex gap-3">
+            <a href="/receptionist/checkingguests" class="bg-[#008080] text-white px-6 py-2 rounded-lg hover:bg-teal-700 transition">
+              New Check-In
+            </a>
+            <a href="/receptionist/checkoutguests" class="bg-teal-100 text-[#008080] px-6 py-2 rounded-lg hover:bg-teal-200 transition">
+              Guest Checkout
+            </a>
+            <a href="/receptionist/rooms" class="border border-gray-300 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-50 transition">
+              View Rooms
+            </a>
+          </div>
+        </div>
+        
+        <div class="w-1/2">
+          <img 
+            src="/images/hotel-lobby.jpg" 
+            alt="Hotel Lobby" 
+            class="w-full h-full object-cover"
+          >
+        </div>
+      </div>
+    </section>
+
+    <!-- Overview Statistics -->
+    <section class="mb-6">
+      <h3 class="text-lg font-semibold text-gray-800 mb-4">Overview</h3>
+      
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <!-- Total Rooms -->
+        <!-- BACKEND TODO: Replace hardcoded value with {{totalRooms}} -->
+        <div class="bg-white rounded-lg shadow-sm p-6 border-l-4 border-[#008080]">
+          <div class="flex items-center gap-2 text-gray-600 text-sm mb-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+            </svg>
+            Total Rooms
+          </div>
+          <p class="text-3xl font-bold text-gray-800">50</p>
+          <p class="text-xs text-gray-500 mt-1">rooms</p>
+        </div>
+
+        <!-- Rooms Ready -->
+        <!-- BACKEND TODO: Replace hardcoded value with {{roomsReady}} -->
+        <div class="bg-white rounded-lg shadow-sm p-6 border-l-4 border-green-500">
+          <div class="flex items-center gap-2 text-gray-600 text-sm mb-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            Rooms Ready
+          </div>
+          <p class="text-3xl font-bold text-gray-800">35</p>
+          <p class="text-xs text-gray-500 mt-1">available</p>
+        </div>
+
+        <!-- Pending Cleaning -->
+        <!-- BACKEND TODO: Replace hardcoded value with {{pendingCleaning}} -->
+        <div class="bg-white rounded-lg shadow-sm p-6 border-l-4 border-orange-500">
+          <div class="flex items-center gap-2 text-gray-600 text-sm mb-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            Pending Cleaning
+          </div>
+          <p class="text-3xl font-bold text-gray-800">8</p>
+          <p class="text-xs text-gray-500 mt-1">rooms</p>
+        </div>
+
+        <!-- Occupied -->
+        <!-- BACKEND TODO: Replace hardcoded value with {{occupied}} -->
+        <div class="bg-white rounded-lg shadow-sm p-6 border-l-4 border-blue-500">
+          <div class="flex items-center gap-2 text-gray-600 text-sm mb-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+            </svg>
+            Occupied
+          </div>
+          <p class="text-3xl font-bold text-gray-800">7</p>
+          <p class="text-xs text-gray-500 mt-1">rooms</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Occupancy Trends and Recent Activity Side by Side -->
+    <section class="mb-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <!-- Occupancy Trends Chart - Takes 2 columns -->
+      <div class="bg-white rounded-lg shadow-sm p-6 lg:col-span-2">
+        <div class="flex items-center gap-2 mb-1">
+          <svg class="w-5 h-5 text-[#008080]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+          </svg>
+          <h3 class="text-lg font-semibold text-gray-800">Occupancy Trends</h3>
+        </div>
+        <p class="text-sm text-gray-500 mb-6">Weekly room occupancy rates</p>
+        
+        <!-- Chart Area -->
+        <!-- BACKEND TODO: Integrate actual chart library (Chart.js, etc.) with {{occupancyData}} -->
+        <div class="relative h-64 flex items-end justify-between gap-2 border-b border-l border-gray-200 px-4 pb-4">
+          <!-- Y-axis labels -->
+          <div class="absolute left-0 top-0 bottom-0 flex flex-col justify-between text-xs text-gray-500 pr-2">
+            <span>60</span>
+            <span>45</span>
+            <span>30</span>
+            <span>15</span>
+          </div>
+          
+          <!-- Chart visualization (placeholder) -->
+          <div class="flex-1 ml-8 h-full relative">
+            <!-- SVG gradient area chart placeholder -->
+            <svg class="w-full h-full" viewBox="0 0 700 200" preserveAspectRatio="none">
+              <defs>
+                <linearGradient id="chartGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" style="stop-color:#008080;stop-opacity:0.6" />
+                  <stop offset="100%" style="stop-color:#008080;stop-opacity:0.1" />
+                </linearGradient>
+              </defs>
+              <path d="M 0 120 L 100 100 L 200 80 L 300 90 L 400 60 L 500 50 L 600 70 L 700 40 L 700 200 L 0 200 Z" fill="url(#chartGradient)" />
+              <path d="M 0 120 L 100 100 L 200 80 L 300 90 L 400 60 L 500 50 L 600 70 L 700 40" fill="none" stroke="#008080" stroke-width="2" />
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Activity - Takes 1 column -->
+      <div class="bg-white rounded-lg shadow-sm p-6 lg:col-span-1">
+        <div class="flex items-center gap-2 mb-1">
+          <svg class="w-5 h-5 text-[#008080]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          <h3 class="text-lg font-semibold text-gray-800">Recent Activity</h3>
+        </div>
+        <p class="text-sm text-gray-500 mb-4">Latest system updates</p>
+        
+        <!-- Activity List -->
+        <!-- BACKEND TODO: Loop through {{recentActivity}} array -->
+        <ul class="space-y-3">
+          <li class="flex items-start gap-3 pb-3 border-b border-gray-100">
+            <div class="bg-[#008080] text-white rounded-full p-1.5 mt-1 flex-shrink-0">
+              <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                <circle cx="10" cy="10" r="8"/>
+              </svg>
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="text-sm font-medium text-gray-800">Guest Check-In</p>
+              <p class="text-xs text-gray-600 truncate">Room 302 • John Smith</p>
+              <p class="text-xs text-gray-400 mt-1">10 minutes ago</p>
+            </div>
+          </li>
+          
+          <li class="flex items-start gap-3 pb-3 border-b border-gray-100">
+            <div class="bg-[#008080] text-white rounded-full p-1.5 mt-1 flex-shrink-0">
+              <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                <circle cx="10" cy="10" r="8"/>
+              </svg>
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="text-sm font-medium text-gray-800">Cleaning Complete</p>
+              <p class="text-xs text-gray-600 truncate">Room 205</p>
+              <p class="text-xs text-gray-400 mt-1">25 minutes ago</p>
+            </div>
+          </li>
+          
+          <li class="flex items-start gap-3">
+            <div class="bg-[#008080] text-white rounded-full p-1.5 mt-1 flex-shrink-0">
+              <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                <circle cx="10" cy="10" r="8"/>
+              </svg>
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="text-sm font-medium text-gray-800">Guest Check-Out</p>
+              <p class="text-xs text-gray-600 truncate">Room 101 • Jane Doe</p>
+              <p class="text-xs text-gray-400 mt-1">1 hour ago</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Our Property -->
+    <section class="mb-6">
+      <h3 class="text-lg font-semibold text-gray-800 mb-4">Our Property</h3>
+      
+      <!-- BACKEND TODO: Loop through {{propertyImages}} array -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <!-- Property Card 1 -->
+        <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+          <img 
+            src="/images/luxury-suite.jpg" 
+            alt="Luxury Suites" 
+            class="w-full h-48 object-cover"
+          >
+          <div class="p-4">
+            <h4 class="font-semibold text-gray-800 mb-1">Luxury Suites</h4>
+            <p class="text-sm text-gray-600">Experience comfort at its finest with modern amenities</p>
+          </div>
+        </div>
+        
+        <!-- Property Card 2 -->
+        <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+          <img 
+            src="/images/premium-amenities.jpg" 
+            alt="Premium Amenities" 
+            class="w-full h-48 object-cover"
+          >
+          <div class="p-4">
+            <h4 class="font-semibold text-gray-800 mb-1">Premium Amenities</h4>
+            <p class="text-sm text-gray-600">Top-tier facilities and services</p>
+          </div>
+        </div>
+        
+        <!-- Property Card 3 -->
+        <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+          <img 
+            src="/images/spa-bathroom.jpg" 
+            alt="Spa-like Bathrooms" 
+            class="w-full h-48 object-cover"
+          >
+          <div class="p-4">
+            <h4 class="font-semibold text-gray-800 mb-1">Spa-like Bathrooms</h4>
+            <p class="text-sm text-gray-600">Elegance and comfort combined</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
