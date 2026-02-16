@@ -2,14 +2,17 @@ const express = require('express');
 const session = require('express-session');
 const path = require('path');
 const hbs = require('hbs');
+const fs = require('fs');
 
 const app = express();
+
+// ================= MIDDLEWARE =================
 
 // Body parser
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-// Static files - MUST BE HERE, BEFORE ROUTES
+// Static files (MUST be before routes)
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Session
@@ -19,27 +22,45 @@ app.use(session({
   saveUninitialized: true
 }));
 
-// View engine setup
+// ================= VIEW ENGINE =================
+
 app.set('view engine', 'hbs');
 app.set('views', path.join(__dirname, 'views'));
 
-// Register partials directory (only if it exists)
+// Register partials (if folder exists)
 const partialsPath = path.join(__dirname, 'views/partials');
-const fs = require('fs');
 if (fs.existsSync(partialsPath)) {
   hbs.registerPartials(partialsPath);
 }
 
-// Routes - MUST BE AFTER STATIC FILES
+// Custom Handlebars helper
+hbs.registerHelper('eq', function (a, b) {
+  return a === b;
+});
+
+// ================= ROUTES =================
+
 const authRoutes = require('./routes/auth.routes');
 const receptionistRoutes = require('./routes/receptionist.routes');
 const housekeepingRoutes = require('./routes/housekeeping.routes');
+const housekeepersRoutes = require('./routes/housekeepers.routes');
 
+// Auth routes
 app.use('/', authRoutes);
+
+// 🔥 IMPORTANT: Specific route must come BEFORE general one
+app.use('/receptionist/housekeepers', housekeepersRoutes);
+
+// General receptionist routes
 app.use('/receptionist', receptionistRoutes);
+
+// Housekeeping staff routes
 app.use('/housekeeping', housekeepingRoutes);
 
+// ================= SERVER =================
+
 const PORT = 3001;
+
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });

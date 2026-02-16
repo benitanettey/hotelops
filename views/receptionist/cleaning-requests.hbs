@@ -1,0 +1,289 @@
+<!-- ================= TOP HEADER ================= -->
+<header class="bg-[#0f766e] shadow-sm">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="flex items-center justify-between h-16">
+
+      <!-- Logo Section -->
+      <div class="flex items-center gap-3">
+        <div class="bg-white/20 p-2 rounded-lg">
+          <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M3 21h18M9 8h6m-6 4h6m-6 4h6M5 21V7a2 2 0 012-2h10a2 2 0 012 2v14" />
+          </svg>
+        </div>
+        <div>
+          <h1 class="text-white font-semibold text-lg">StaySync</h1>
+          <p class="text-white/80 text-xs">Receptionist Portal</p>
+        </div>
+      </div>
+
+      <!-- Placeholder Profile -->
+      <div class="w-28 h-9 bg-white/30 rounded-lg"></div>
+
+    </div>
+  </div>
+</header>
+
+<!-- ================= SECONDARY NAV ================= -->
+<nav class="bg-white border-b">
+  <div class="max-w-7xl mx-auto px-6">
+    <ul class="flex items-center gap-8 text-sm font-medium text-gray-600 h-12">
+
+      <li>
+        <a href="/receptionist/dashboard"
+          class="{{#if (eq title 'Dashboard')}}text-[#0f766e] border-b-2 border-[#0f766e] pb-2{{else}}hover:text-[#0f766e]{{/if}}">
+          Dashboard
+        </a>
+      </li>
+
+      <li>
+        <a href="/receptionist/checkingguests"
+          class="{{#if (eq title 'Check-In')}}text-[#0f766e] border-b-2 border-[#0f766e] pb-2{{else}}hover:text-[#0f766e]{{/if}}">
+          Check-In
+        </a>
+      </li>
+
+      <li>
+        <a href="/receptionist/checkoutguests"
+          class="{{#if (eq title 'Checkout')}}text-[#0f766e] border-b-2 border-[#0f766e] pb-2{{else}}hover:text-[#0f766e]{{/if}}">
+          Checkout
+        </a>
+      </li>
+
+      <li>
+        <a href="/receptionist/rooms"
+          class="{{#if (eq title 'Room Management')}}text-[#0f766e] border-b-2 border-[#0f766e] pb-2{{else}}hover:text-[#0f766e]{{/if}}">
+          Rooms
+        </a>
+      </li>
+
+      <li>
+        <a href="/receptionist/cleaning-requests" class="text-[#0f766e] border-b-2 border-[#0f766e] pb-2">
+          Cleaning Requests
+        </a>
+      </li>
+
+      <li>
+        <a href="/receptionist/housekeepers"
+          class="{{#if (eq title 'Housekeepers')}}text-[#0f766e] border-b-2 border-[#0f766e] pb-2{{else}}hover:text-[#0f766e]{{/if}}">
+          Housekeepers
+        </a>
+      </li>
+
+    </ul>
+  </div>
+</nav>
+
+
+</div>
+</header>
+
+<!-- ================= MAIN ================= -->
+<main class="max-w-7xl mx-auto px-6 py-8 space-y-10">
+
+  <!-- SUCCESS TOAST -->
+  {{#if success}}
+  <div class="fixed top-6 right-6 bg-green-600 text-white px-6 py-3 rounded-xl shadow-lg">
+    {{success}}
+  </div>
+  {{/if}}
+
+  <!-- ================= HERO BANNER ================= -->
+  <div class="relative rounded-2xl overflow-hidden h-[220px]">
+
+    <!-- Background Image -->
+    <img src="/images/cleaning-tasks.jpg" class="absolute inset-0 w-full h-full object-cover" />
+
+    <!-- Teal Overlay -->
+    <div class="absolute inset-0 bg-[#0f766e]/85"></div>
+
+    <!-- Glass Panel -->
+    <div class="relative z-10 h-full flex items-center">
+
+      <div class="backdrop-blur-md bg-white/10 border border-white/20
+                    rounded-xl px-8 py-6 max-w-xl ml-8
+                    animate-fadeIn">
+
+        <h3 class="text-2xl font-semibold text-white mb-2">
+          Cleaning Operations
+        </h3>
+
+        <p class="text-white/90 text-sm mb-4">
+          Efficient room maintenance and cleaning coordination.
+        </p>
+
+        <div class="inline-flex items-center gap-2 bg-white/20
+                      px-4 py-1.5 rounded-full text-white text-xs font-medium">
+
+          <span class="w-2 h-2 bg-yellow-400 rounded-full animate-pulse"></span>
+
+          {{cleaningRequests.length}} Active Requests
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ================= GRID LAYOUT ================= -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+    <!-- ================= FORM CARD ================= -->
+    <div class="bg-white rounded-2xl shadow-sm p-8">
+
+      <h3 class="text-lg font-semibold text-gray-800 mb-6">
+        New Cleaning Request
+      </h3>
+
+      <!-- // BACKEND TODO: POST /receptionist/cleaning-requests -->
+      <form method="POST" action="/receptionist/cleaning-requests" class="space-y-5">
+
+        <div>
+          <label class="text-sm font-medium text-gray-600">
+            Room Number
+          </label>
+          <input type="text" name="roomNumber" placeholder="e.g., 101" required
+            class="w-full mt-1 px-4 py-2 rounded-lg bg-gray-50 border border-gray-200 focus:ring-2 focus:ring-[#0f766e] focus:border-transparent outline-none">
+        </div>
+
+        <div>
+          <label class="text-sm font-medium text-gray-600">
+            Cleaning Type
+          </label>
+          <select name="serviceType"
+            class="w-full mt-1 px-4 py-2 rounded-lg bg-gray-50 border border-gray-200 focus:ring-2 focus:ring-[#0f766e] focus:border-transparent outline-none">
+            <option value="Daily Cleaning">Daily Cleaning</option>
+            <option value="Checkout Cleaning">Checkout Cleaning</option>
+            <option value="Deep Cleaning">Deep Cleaning</option>
+            <option value="Turndown Service">Turndown Service</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="text-sm font-medium text-gray-600">
+            Priority
+          </label>
+          <select name="priority"
+            class="w-full mt-1 px-4 py-2 rounded-lg bg-gray-50 border border-gray-200 focus:ring-2 focus:ring-[#0f766e] focus:border-transparent outline-none">
+            <option value="Low">Low</option>
+            <option value="Medium" selected>Medium</option>
+            <option value="High">High</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="text-sm font-medium text-gray-600">
+            Notes
+          </label>
+          <textarea name="instructions" rows="3"
+            class="w-full mt-1 px-4 py-2 rounded-lg bg-gray-50 border border-gray-200 focus:ring-2 focus:ring-[#0f766e] focus:border-transparent outline-none resize-none"></textarea>
+        </div>
+
+        <button class="w-full bg-[#0f766e] hover:bg-teal-700 text-white py-2.5 rounded-lg font-medium transition">
+          Create Request
+        </button>
+
+      </form>
+    </div>
+
+    <!-- ================= TABLE CARD ================= -->
+    <div class="lg:col-span-2 bg-white rounded-2xl shadow-sm p-8">
+
+      <h3 class="text-lg font-semibold text-gray-800 mb-6">
+        All Requests
+      </h3>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+
+          <thead class="text-gray-500 border-b">
+            <tr>
+              <th class="text-left py-3 font-medium">Room</th>
+              <th class="text-left py-3 font-medium">Type</th>
+              <th class="text-left py-3 font-medium">Priority</th>
+              <th class="text-left py-3 font-medium">Status</th>
+              <th class="text-left py-3 font-medium">Assigned</th>
+              <th class="text-left py-3 font-medium">Notes</th>
+              <th class="text-left py-3 font-medium">Time</th>
+            </tr>
+          </thead>
+
+          <tbody class="divide-y divide-gray-100">
+
+            {{#each cleaningRequests}}
+            <tr class="hover:bg-gray-50 transition">
+
+              <td class="py-3">{{roomNumber}}</td>
+              <td class="py-3">{{serviceType}}</td>
+
+              <td class="py-3">
+                {{#if (eq priority "High")}}
+                <span class="px-3 py-1 text-xs rounded-full bg-red-100 text-red-600">High</span>
+                {{else}}
+                {{#if (eq priority "Medium")}}
+                <span class="px-3 py-1 text-xs rounded-full bg-yellow-100 text-yellow-700">Medium</span>
+                {{else}}
+                <span class="px-3 py-1 text-xs rounded-full bg-gray-200 text-gray-600">Low</span>
+                {{/if}}
+                {{/if}}
+              </td>
+
+              <td class="py-3">
+                {{#if (eq status "In Progress")}}
+                <span class="px-3 py-1 text-xs rounded-full bg-blue-100 text-blue-600">In Progress</span>
+                {{else}}
+                {{#if (eq status "Pending")}}
+                <span class="px-3 py-1 text-xs rounded-full bg-yellow-100 text-yellow-700">Pending</span>
+                {{else}}
+                <span class="px-3 py-1 text-xs rounded-full bg-green-100 text-green-600">Completed</span>
+                {{/if}}
+                {{/if}}
+              </td>
+
+              <td class="py-3">
+                {{#if assignedTo}}
+                {{assignedTo.name}}
+                {{else}}
+                <span class="text-gray-400">-</span>
+                {{/if}}
+              </td>
+
+              <td class="py-3 text-gray-500">
+                {{instructions}}
+              </td>
+
+              <td class="py-3 text-gray-500">
+                {{time}}
+              </td>
+
+            </tr>
+            {{/each}}
+
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+
+</main>
+</div>
+
+<!-- ================= FADE ANIMATION ================= -->
+<style>
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-fadeIn {
+    animation: fadeIn 0.7s ease-out forwards;
+  }
+</style>

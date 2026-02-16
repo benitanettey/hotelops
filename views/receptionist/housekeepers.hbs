@@ -1,0 +1,199 @@
+<div class="min-h-screen bg-gray-100">
+
+  <!-- ================= TOP HEADER ================= -->
+  <header class="bg-[#0f766e] shadow-sm">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="flex items-center justify-between h-16">
+
+        <!-- Logo -->
+        <div class="flex items-center gap-3">
+          <div class="bg-white/20 p-2 rounded-lg">
+            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M3 21h18M9 8h6m-6 4h6m-6 4h6M5 21V7a2 2 0 012-2h10a2 2 0 012 2v14" />
+            </svg>
+          </div>
+          <div>
+            <h1 class="text-white font-semibold text-lg">StaySync</h1>
+            <p class="text-white/80 text-xs">Receptionist Portal</p>
+          </div>
+        </div>
+
+        <div class="w-28 h-9 bg-white/30 rounded-lg"></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= SECONDARY NAV ================= -->
+  <nav class="bg-white border-b">
+    <div class="max-w-7xl mx-auto px-6">
+      <ul class="flex items-center gap-8 text-sm font-medium text-gray-600 h-12">
+        <li><a href="/receptionist/dashboard" class="hover:text-[#0f766e]">Dashboard</a></li>
+        <li><a href="/receptionist/checkingguests" class="hover:text-[#0f766e]">Check-In</a></li>
+        <li><a href="/receptionist/checkoutguests" class="hover:text-[#0f766e]">Checkout</a></li>
+        <li><a href="/receptionist/rooms" class="hover:text-[#0f766e]">Rooms</a></li>
+        <li><a href="/receptionist/cleaning-requests" class="hover:text-[#0f766e]">Cleaning Requests</a></li>
+        <li><a href="/receptionist/housekeepers"
+            class="text-[#0f766e] border-b-2 border-[#0f766e] pb-2">Housekeepers</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- ================= PAGE CONTENT ================= -->
+  <main class="max-w-7xl mx-auto px-6 py-8">
+
+    <!-- ================= HERO BANNER ================= -->
+    <div class="relative rounded-2xl overflow-hidden mb-10 h-[220px]">
+
+      <!-- Parallax Background -->
+      <div class="absolute inset-0 bg-fixed bg-center bg-cover"
+        style="background-image: url('/images/cleaningsupplies.jpg');">
+      </div>
+
+      <!-- Teal Overlay -->
+      <div class="absolute inset-0 bg-[#0f766e]/85"></div>
+
+      <!-- Glass Panel -->
+      <div class="relative z-10 h-full flex items-center">
+
+        <div class="backdrop-blur-md bg-white/10 border border-white/20 
+                rounded-xl px-8 py-6 max-w-xl ml-8
+                animate-fadeIn">
+
+          <h3 class="text-2xl font-semibold text-white mb-2">
+            Our Dedicated Team
+          </h3>
+
+          <p class="text-white/90 text-sm mb-4">
+            Professional housekeeping staff committed to excellence.
+          </p>
+
+          <!-- Staff Badge -->
+          <div class="inline-flex items-center gap-2 bg-white/20 
+                  px-4 py-1.5 rounded-full text-white text-xs font-medium">
+
+            <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+
+            {{stats.totalStaff}} Active Staff
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+
+    <!-- ================= STATS ================= -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+
+      <div class="bg-white rounded-xl shadow-sm p-6 text-center">
+        <p class="text-3xl font-bold text-gray-800">{{stats.totalStaff}}</p>
+        <p class="text-gray-500 text-sm mt-1">Total Staff</p>
+      </div>
+
+      <div class="bg-white rounded-xl shadow-sm p-6 text-center">
+        <p class="text-3xl font-bold text-green-600">{{stats.activeShift}}</p>
+        <p class="text-gray-500 text-sm mt-1">Active Today</p>
+      </div>
+
+      <div class="bg-white rounded-xl shadow-sm p-6 text-center">
+        <p class="text-3xl font-bold text-blue-600">{{stats.tasksCompleted}}</p>
+        <p class="text-gray-500 text-sm mt-1">Tasks Completed</p>
+      </div>
+
+    </div>
+
+    <!-- ================= TWO COLUMN LAYOUT ================= -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+      <!-- LEFT: FORM -->
+      <div class="bg-white rounded-2xl shadow-sm p-8">
+
+        <h3 class="text-lg font-semibold text-gray-800 mb-6">
+          Add New Staff
+        </h3>
+
+        <form class="space-y-5">
+
+          <input type="text" placeholder="Full Name"
+            class="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-[#0f766e] focus:outline-none">
+
+          <input type="email" placeholder="Email"
+            class="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-[#0f766e] focus:outline-none">
+
+          <input type="text" placeholder="Phone Number"
+            class="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-[#0f766e] focus:outline-none">
+
+          <button class="w-full bg-[#0f766e] text-white py-2 rounded-lg hover:bg-teal-700 transition">
+            Add Housekeeper
+          </button>
+
+        </form>
+
+      </div>
+
+      <!-- RIGHT: ACTIVE HOUSEKEEPERS -->
+      <div class="lg:col-span-2 bg-white rounded-2xl shadow-sm p-8">
+
+        <h3 class="text-lg font-semibold text-gray-800 mb-6">
+          Active Housekeepers
+        </h3>
+
+        <div class="space-y-6">
+          {{#each housekeepers}}
+          <div
+            class="border border-gray-200 rounded-xl p-6 flex justify-between items-center hover:shadow-md transition">
+
+            <div>
+              <p class="font-semibold text-gray-800">{{this.name}}</p>
+              <p class="text-sm text-gray-500">{{this.location}}</p>
+
+              <div class="mt-3 w-64 bg-gray-200 rounded-full h-2">
+                <div class="bg-[#0f766e] h-2 rounded-full" style="width: {{this.workload}}%;"></div>
+              </div>
+
+              <p class="text-xs text-gray-500 mt-1">
+                {{this.workload}}% workload
+              </p>
+            </div>
+
+            <div>
+              <span class="px-3 py-1 text-sm rounded-full
+                {{#if this.onShift}}
+                  bg-green-100 text-green-600
+                {{else}}
+                  bg-gray-100 text-gray-600
+                {{/if}}">
+                {{#if this.onShift}}On Shift{{else}}Off Duty{{/if}}
+              </span>
+            </div>
+
+          </div>
+          {{/each}}
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+</div>
+
+<!-- ================= ANIMATION STYLES ================= -->
+<style>
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(15px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-fadeIn {
+    animation: fadeIn 0.8s ease-out forwards;
+  }
+</style>

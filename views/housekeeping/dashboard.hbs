@@ -1,0 +1,229 @@
+<!-- 
+  HOUSEKEEPING DASHBOARD
+
+  BACKEND TODO:
+  - Ensure only logged-in housekeepers can access this page
+  - Filter tasks by logged-in housekeeper ID
+  - Pass:
+      {
+        housekeeper: { name, isActive },
+        tasks: [],
+        stats: {
+          pending,
+          inProgress,
+          completed
+        }
+      }
+  - Handle POST /housekeeping/toggle-status
+  - Handle POST /housekeeping/start/:taskId
+  - Handle POST /housekeeping/complete/:taskId
+-->
+
+<div class="min-h-screen bg-gray-100">
+
+  <!-- ================= TOP HEADER ================= -->
+  <header class="bg-[#0a5c56] shadow-sm">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="flex justify-between items-center h-16 text-white">
+
+        <!-- Logo -->
+        <div>
+          <h1 class="text-lg font-semibold">StaySync</h1>
+          <p class="text-xs opacity-80">Housekeeping Portal</p>
+        </div>
+
+        <!-- Active Toggle -->
+        <form method="POST" action="/housekeeping/toggle-status">
+          <button
+            class="flex items-center gap-3 bg-white/10 px-4 py-1.5 rounded-full backdrop-blur-sm border border-white/20 hover:bg-white/20 transition">
+
+            <span class="text-sm font-medium">
+              {{#if housekeeper.isActive}}Active{{else}}Offline{{/if}}
+            </span>
+
+            <span class="relative inline-flex items-center h-5 w-9 rounded-full 
+              {{#if housekeeper.isActive}}bg-green-500{{else}}bg-gray-400{{/if}}">
+              <span class="inline-block w-4 h-4 transform bg-white rounded-full transition 
+                {{#if housekeeper.isActive}}translate-x-4{{else}}translate-x-1{{/if}}">
+              </span>
+            </span>
+
+          </button>
+        </form>
+
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= MAIN ================= -->
+  <main class="max-w-7xl mx-auto px-6 py-8 space-y-10">
+
+    <!-- Page Intro -->
+    <div class="animate-fadeIn">
+      <h2 class="text-2xl font-semibold text-gray-800">My Tasks</h2>
+      <p class="text-sm text-gray-500 mt-1">
+        Your assigned cleaning tasks for today
+      </p>
+    </div>
+
+    <!-- ================= HERO BANNER ================= -->
+    <div class="relative rounded-2xl overflow-hidden h-[180px] animate-fadeIn">
+
+      <img src="/images/cleaningsupplies.jpg" class="absolute inset-0 w-full h-full object-cover" />
+
+      <div class="absolute inset-0 bg-[#0a5c56]/85"></div>
+
+      <div class="relative z-10 h-full flex items-center">
+
+        <div class="ml-8 backdrop-blur-md bg-white/10 border border-white/20
+                    rounded-xl px-8 py-6 max-w-xl">
+
+          <h3 class="text-2xl font-semibold text-white mb-2">
+            Quality Service
+          </h3>
+
+          <p class="text-white/90 text-sm">
+            Ensuring guest satisfaction through excellence
+          </p>
+
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ================= STATS ================= -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 animate-fadeIn">
+
+      <div class="bg-white rounded-xl shadow-sm p-6 border-t-4 border-yellow-500">
+        <p class="text-3xl font-bold text-yellow-600">{{stats.pending}}</p>
+        <p class="text-sm text-gray-500 mt-1">Pending Tasks</p>
+      </div>
+
+      <div class="bg-white rounded-xl shadow-sm p-6 border-t-4 border-blue-500">
+        <p class="text-3xl font-bold text-blue-600">{{stats.inProgress}}</p>
+        <p class="text-sm text-gray-500 mt-1">In Progress</p>
+      </div>
+
+      <div class="bg-white rounded-xl shadow-sm p-6 border-t-4 border-green-500">
+        <p class="text-3xl font-bold text-green-600">{{stats.completed}}</p>
+        <p class="text-sm text-gray-500 mt-1">Completed Today</p>
+      </div>
+
+    </div>
+
+    <!-- ================= TASK TABLE ================= -->
+    <div class="bg-white rounded-2xl shadow-sm p-8 animate-fadeIn">
+
+      <h3 class="text-lg font-semibold text-gray-800 mb-6">
+        Assigned Tasks
+      </h3>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+
+          <thead class="text-gray-500 border-b">
+            <tr>
+              <th class="text-left py-3 font-medium">Room</th>
+              <th class="text-left py-3 font-medium">Status</th>
+              <th class="text-left py-3 font-medium">Notes</th>
+              <th class="text-left py-3 font-medium">Assigned At</th>
+              <th class="text-left py-3 font-medium">Actions</th>
+            </tr>
+          </thead>
+
+          <tbody class="divide-y divide-gray-100">
+
+            {{#each tasks}}
+            <tr class="hover:bg-gray-50 transition">
+
+              <td class="py-4 font-medium text-gray-800">
+                {{roomNumber}}
+              </td>
+
+              <td class="py-4">
+                {{#if (eq status "pending")}}
+                <span class="px-3 py-1 text-xs rounded-full bg-yellow-100 text-yellow-700">
+                  pending
+                </span>
+                {{/if}}
+
+                {{#if (eq status "in-progress")}}
+                <span class="px-3 py-1 text-xs rounded-full bg-blue-100 text-blue-700">
+                  in-progress
+                </span>
+                {{/if}}
+
+                {{#if (eq status "completed")}}
+                <span class="px-3 py-1 text-xs rounded-full bg-green-100 text-green-700">
+                  completed
+                </span>
+                {{/if}}
+              </td>
+
+              <td class="py-4 text-gray-600">
+                {{notes}}
+              </td>
+
+              <td class="py-4 text-gray-500">
+                {{assignedAt}}
+              </td>
+
+              <td class="py-4">
+
+                {{#if (eq status "pending")}}
+                <form method="POST" action="/housekeeping/start/{{id}}">
+                  <button class="px-4 py-1.5 rounded-lg bg-gray-200 hover:bg-gray-300 text-sm transition">
+                    Start
+                  </button>
+                </form>
+                {{/if}}
+
+                {{#if (eq status "in-progress")}}
+                <form method="POST" action="/housekeeping/complete/{{id}}">
+                  <button class="px-4 py-1.5 rounded-lg bg-[#0a5c56] hover:bg-[#084843] text-white text-sm transition">
+                    Complete
+                  </button>
+                </form>
+                {{/if}}
+
+              </td>
+
+            </tr>
+            {{/each}}
+
+            {{#unless tasks.length}}
+            <tr>
+              <td colspan="5" class="py-12 text-center text-gray-400">
+                No tasks assigned today
+              </td>
+            </tr>
+            {{/unless}}
+
+          </tbody>
+
+        </table>
+      </div>
+
+    </div>
+
+  </main>
+</div>
+
+<!-- ================= FADE ANIMATION ================= -->
+<style>
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-fadeIn {
+    animation: fadeIn 0.6s ease-out forwards;
+  }
+</style>

@@ -1,17 +1,25 @@
 const express = require('express');
 const router = express.Router();
 
-// Redirect root to dashboard
+// ================= ROOT =================
+// Default entry point → Receptionist Dashboard
 router.get('/', (req, res) => {
   res.redirect('/receptionist/dashboard');
 });
 
-router.get('/login', (req, res) => {
-  res.send('Login page - TODO: Create login.hbs');
+
+// ================= HOUSEKEEPING ENTRY =================
+// Direct access to housekeeping dashboard (temporary frontend access)
+router.get('/housekeeping', (req, res) => {
+  res.redirect('/housekeeping/dashboard');
 });
 
+
+// ================= LOGOUT =================
+// No session logic yet (frontend only)
 router.get('/logout', (req, res) => {
   res.redirect('/');
 });
+
 
 module.exports = router;

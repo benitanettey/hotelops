@@ -1,0 +1,210 @@
+<div class="min-h-screen bg-gray-100">
+
+  <!-- ================= TOP HEADER ================= -->
+  <header class="bg-[#0f766e] shadow-sm">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="flex items-center justify-between h-16">
+
+        <!-- Logo Section -->
+        <div class="flex items-center gap-3">
+          <div class="bg-white/20 p-2 rounded-lg">
+            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M3 21h18M9 8h6m-6 4h6m-6 4h6M5 21V7a2 2 0 012-2h10a2 2 0 012 2v14" />
+            </svg>
+          </div>
+          <div>
+            <h1 class="text-white font-semibold text-lg">StaySync</h1>
+            <p class="text-white/80 text-xs">Receptionist Portal</p>
+          </div>
+        </div>
+
+        <div class="w-28 h-9 bg-white/30 rounded-lg"></div>
+
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= SECONDARY NAV ================= -->
+  <nav class="bg-white border-b">
+    <div class="max-w-7xl mx-auto px-6">
+      <ul class="flex items-center gap-8 text-sm font-medium text-gray-600 h-12">
+
+        <li>
+          <a href="/receptionist/dashboard"
+            class="{{#if (eq title 'Dashboard')}}text-[#0f766e] border-b-2 border-[#0f766e] pb-2{{else}}hover:text-[#0f766e]{{/if}}">
+            Dashboard
+          </a>
+        </li>
+
+        <li>
+          <a href="/receptionist/checkingguests"
+            class="{{#if (eq title 'Check-In')}}text-[#0f766e] border-b-2 border-[#0f766e] pb-2{{else}}hover:text-[#0f766e]{{/if}}">
+            Check-In
+          </a>
+        </li>
+
+        <li>
+          <a href="/receptionist/checkoutguests"
+            class="{{#if (eq title 'Checkout')}}text-[#0f766e] border-b-2 border-[#0f766e] pb-2{{else}}hover:text-[#0f766e]{{/if}}">
+            Checkout
+          </a>
+        </li>
+
+        <li>
+          <a href="/receptionist/rooms"
+            class="{{#if (eq title 'Room Management')}}text-[#0f766e] border-b-2 border-[#0f766e] pb-2{{else}}hover:text-[#0f766e]{{/if}}">
+            Rooms
+          </a>
+        </li>
+
+        <li>
+          <a href="/receptionist/cleaning-requests"
+            class="{{#if (eq title 'Cleaning Requests')}}text-[#0f766e] border-b-2 border-[#0f766e] pb-2{{else}}hover:text-[#0f766e]{{/if}}">
+            Cleaning Requests
+          </a>
+        </li>
+
+        <li>
+          <a href="/receptionist/housekeepers"
+            class="{{#if (eq title 'Housekeepers')}}text-[#0f766e] border-b-2 border-[#0f766e] pb-2{{else}}hover:text-[#0f766e]{{/if}}">
+            Housekeepers
+          </a>
+        </li>
+
+      </ul>
+    </div>
+  </nav>
+
+  <!-- ================= PAGE CONTENT ================= -->
+  <main class="max-w-7xl mx-auto px-6 py-10 space-y-10">
+
+    <!-- ================= ROOM TYPE BANNERS ================= -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+      <div class="relative rounded-2xl overflow-hidden shadow-md group">
+        <img src="/images/standardroom.jpg"
+          class="w-full h-56 object-cover group-hover:scale-105 transition duration-500">
+        <div class="absolute inset-0 bg-black/40 flex flex-col justify-end p-6">
+          <h3 class="text-white text-xl font-semibold">Standard Rooms</h3>
+          <p class="text-gray-200 text-sm">Comfortable and well-equipped</p>
+        </div>
+      </div>
+
+      <div class="relative rounded-2xl overflow-hidden shadow-md group">
+        <img src="/images/premiumroom.jpg"
+          class="w-full h-56 object-cover group-hover:scale-105 transition duration-500">
+        <div class="absolute inset-0 bg-black/40 flex flex-col justify-end p-6">
+          <h3 class="text-white text-xl font-semibold">Premium Suites</h3>
+          <p class="text-gray-200 text-sm">Luxury accommodations</p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ================= SUMMARY CARDS ================= -->
+    <div class="grid grid-cols-1 sm:grid-cols-5 gap-6">
+
+      <div class="bg-white rounded-xl shadow-sm p-6 text-center border border-teal-600">
+        <p class="text-3xl font-bold text-teal-700">{{totalRooms}}</p>
+        <p class="text-gray-500 text-sm mt-1">All Rooms</p>
+      </div>
+
+      <div class="bg-white rounded-xl shadow-sm p-6 text-center">
+        <p class="text-3xl font-bold text-green-600">{{availableRooms}}</p>
+        <p class="text-gray-500 text-sm mt-1">Available</p>
+      </div>
+
+      <div class="bg-white rounded-xl shadow-sm p-6 text-center">
+        <p class="text-3xl font-bold text-blue-600">{{occupiedRooms}}</p>
+        <p class="text-gray-500 text-sm mt-1">Occupied</p>
+      </div>
+
+      <div class="bg-white rounded-xl shadow-sm p-6 text-center">
+        <p class="text-3xl font-bold text-orange-500">{{cleaningRooms}}</p>
+        <p class="text-gray-500 text-sm mt-1">Cleaning</p>
+      </div>
+
+      <div class="bg-white rounded-xl shadow-sm p-6 text-center">
+        <p class="text-3xl font-bold text-red-500">{{maintenanceRooms}}</p>
+        <p class="text-gray-500 text-sm mt-1">Maintenance</p>
+      </div>
+
+    </div>
+
+    <!-- ================= ROOMS TABLE ================= -->
+    <div class="bg-white rounded-2xl shadow-sm p-8">
+
+      <div class="flex justify-between items-center mb-6">
+        <h3 class="text-lg font-semibold text-gray-800">Room List</h3>
+        <input type="text" placeholder="Search rooms..."
+          class="border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0f766e] focus:border-transparent">
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="text-left text-gray-500 border-b">
+              <th class="py-3">Room Number</th>
+              <th>Type</th>
+              <th>Floor</th>
+              <th>Status</th>
+              <th>Guest</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+
+          <tbody class="divide-y divide-gray-100">
+
+            {{#each rooms}}
+            <tr class="hover:bg-gray-50 transition">
+              <td class="py-4 font-medium text-gray-800">{{roomNumber}}</td>
+              <td>{{type}}</td>
+              <td>{{floor}}</td>
+
+              <td>
+                {{#if (eq status "Available")}}
+                <span class="px-3 py-1 rounded-full text-xs bg-green-100 text-green-700">Available</span>
+                {{/if}}
+
+                {{#if (eq status "Occupied")}}
+                <span class="px-3 py-1 rounded-full text-xs bg-blue-100 text-blue-700">Occupied</span>
+                {{/if}}
+
+                {{#if (eq status "Cleaning")}}
+                <span class="px-3 py-1 rounded-full text-xs bg-orange-100 text-orange-700">Cleaning</span>
+                {{/if}}
+
+                {{#if (eq status "Maintenance")}}
+                <span class="px-3 py-1 rounded-full text-xs bg-red-100 text-red-700">Maintenance</span>
+                {{/if}}
+              </td>
+
+              <td>
+                {{#if guest}}
+                {{guest}}
+                {{else}}
+                -
+                {{/if}}
+              </td>
+
+              <td>
+                {{#if (eq status "Cleaning")}}
+                <button class="bg-[#0f766e] text-white px-4 py-1 rounded-lg text-xs hover:bg-teal-700 transition">
+                  Mark Cleaned
+                </button>
+                {{else}}
+                -
+                {{/if}}
+              </td>
+            </tr>
+            {{/each}}
+
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+
+  </main>
+</div>

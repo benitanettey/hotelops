@@ -4,7 +4,7 @@ const router = express.Router();
 // Dashboard
 router.get('/dashboard', (req, res) => {
   res.render('receptionist/dashboard', {
-    layout: 'layouts/main',  // ← ADD THIS
+    layout: 'layouts/main',
     title: 'Dashboard',
     totalRooms: 50,
     roomsReady: 35,
@@ -16,7 +16,7 @@ router.get('/dashboard', (req, res) => {
 // Check-in page (GET)
 router.get('/checkingguests', (req, res) => {
   res.render('receptionist/checkingguests', {
-    layout: 'layouts/main',  // ← ADD THIS
+    layout: 'layouts/main',
     title: 'Check-In',
     availableRooms: [
       { number: '101', type: 'Standard', price: 150 },
@@ -35,7 +35,7 @@ router.post('/checkin', (req, res) => {
 // Checkout page (GET)
 router.get('/checkoutguests', (req, res) => {
   res.render('receptionist/checkoutguests', {
-    layout: 'layouts/main',  // ← ADD THIS
+    layout: 'layouts/main',
     title: 'Checkout',
     occupiedRooms: [
       {
@@ -75,17 +75,112 @@ router.post('/checkout', (req, res) => {
   res.redirect('/receptionist/checkoutguests');
 });
 
-// Placeholder routes for other pages
-router.get('/rooms', (req, res) => {
-  res.send('Rooms page - TODO: Create rooms.hbs');
-});
-
+// Cleaning Requests page (GET)
 router.get('/cleaning-requests', (req, res) => {
-  res.send('Cleaning Requests page - TODO: Create cleaning-requests.hbs');
+  // BACKEND TODO: Read from cleaningTasks.json and housekeepers.json
+  const cleaningRequests = [
+    {
+      roomNumber: '102',
+      serviceType: 'Daily Cleaning',
+      instructions: 'Extra towels needed',
+      priority: 'Medium',
+      status: 'In Progress',
+      assignedTo: {
+        name: 'Maria Garcia',
+        initials: 'MG'
+      },
+      time: '09:00 AM'
+    },
+    {
+      roomNumber: '203',
+      serviceType: 'Checkout Cleaning',
+      instructions: 'Guest out at 11 AM',
+      priority: 'High',
+      status: 'Pending',
+      assignedTo: null,
+      time: '08:30 AM'
+    },
+    {
+      roomNumber: '301',
+      serviceType: 'Deep Cleaning',
+      instructions: 'Scheduled maintenance',
+      priority: 'Low',
+      status: 'Pending',
+      assignedTo: null,
+      time: '07:15 AM'
+    },
+    {
+      roomNumber: '105',
+      serviceType: 'Turndown Service',
+      instructions: 'VIP Guest',
+      priority: 'Medium',
+      status: 'Completed',
+      assignedTo: {
+        name: 'John Smith',
+        initials: 'JS'
+      },
+      time: 'Yesterday'
+    }
+  ];
+
+  res.render('receptionist/cleaning-requests', {
+    layout: 'layouts/main',
+    title: 'Cleaning Requests',
+    cleaningRequests: cleaningRequests,
+    totalRequests: 4
+  });
 });
 
-router.get('/housekeepers', (req, res) => {
-  res.send('Housekeepers page - TODO: Create housekeepers.hbs');
+// Cleaning Requests form submission (POST)
+router.post('/cleaning-requests', (req, res) => {
+  const { roomNumber, serviceType, priority, instructions } = req.body;
+
+  // BACKEND TODO: 
+  // 1. Validate inputs
+  // 2. Create new cleaning task object with unique ID
+  // 3. Save to cleaningTasks.json
+  // 4. Redirect back to cleaning requests page
+
+  console.log('New cleaning request:', { roomNumber, serviceType, priority, instructions });
+  res.redirect('/receptionist/cleaning-requests');
 });
+
+
+// Rooms page (GET)
+router.get('/rooms', (req, res) => {
+
+  // BACKEND TODO:
+  // 1. Read rooms from rooms.json
+  // 2. Add filtering logic (status, type, search)
+  // 3. Calculate summary counts dynamically
+
+  const rooms = [
+    { roomNumber: '101', type: 'Standard', floor: 1, status: 'Available', guest: null },
+    { roomNumber: '102', type: 'Standard', floor: 1, status: 'Occupied', guest: 'John Smith' },
+    { roomNumber: '201', type: 'Premium', floor: 2, status: 'Cleaning', guest: null },
+    { roomNumber: '202', type: 'Premium', floor: 2, status: 'Maintenance', guest: null },
+    { roomNumber: '301', type: 'Standard', floor: 3, status: 'Available', guest: null },
+    { roomNumber: '302', type: 'Premium', floor: 3, status: 'Occupied', guest: 'Jane Doe' }
+  ];
+
+  // Calculate summary counts
+  const totalRooms = rooms.length;
+  const availableRooms = rooms.filter(r => r.status === 'Available').length;
+  const occupiedRooms = rooms.filter(r => r.status === 'Occupied').length;
+  const cleaningRooms = rooms.filter(r => r.status === 'Cleaning').length;
+  const maintenanceRooms = rooms.filter(r => r.status === 'Maintenance').length;
+
+  res.render('receptionist/rooms', {
+    layout: 'layouts/main',
+    title: 'Room Management',
+    rooms: rooms,
+    totalRooms: totalRooms,
+    availableRooms: availableRooms,
+    occupiedRooms: occupiedRooms,
+    cleaningRooms: cleaningRooms,
+    maintenanceRooms: maintenanceRooms
+  });
+});
+
 
 module.exports = router;
