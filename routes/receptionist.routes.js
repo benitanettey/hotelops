@@ -1,5 +1,11 @@
 const express = require('express');
 const router = express.Router();
+const { requireAuth } = require('../middleware/auth.middleware');
+const { requireReceptionist } = require('../middleware/role.middleware');
+
+// Apply authentication and role middleware to ALL receptionist routes
+router.use(requireAuth);
+router.use(requireReceptionist);
 
 // Dashboard
 router.get('/dashboard', (req, res) => {

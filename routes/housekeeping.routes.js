@@ -2,6 +2,12 @@
 
 const express = require('express');
 const router = express.Router();
+const { requireAuth } = require('../middleware/auth.middleware');
+const { requireHousekeeper } = require('../middleware/role.middleware');
+
+// Apply authentication and role middleware to ALL housekeeping routes
+router.use(requireAuth);
+router.use(requireHousekeeper);
 
 // ================= HOUSEKEEPING DASHBOARD =================
 router.get('/dashboard', (req, res) => {

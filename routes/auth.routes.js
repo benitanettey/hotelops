@@ -1,25 +1,37 @@
 const express = require('express');
 const router = express.Router();
+const authController = require('../controllers/auth.controller');
+const { redirectIfAuthenticated } = require('../middleware/auth.middleware');
+const { getDashboardPath } = require('../utils/roleHelper');
 
 // ================= ROOT =================
-// Default entry point → Receptionist Dashboard
+// Redirect based on session
 router.get('/', (req, res) => {
-  res.redirect('/receptionist/dashboard');
+  if (req.session && req.session.isAuthenticated) {
+    // Redirect logged-in users based on role
+    return res.redirect(getDashboardPath(req.session.role));
+  }
+  // Not logged in - redirect to login
+  res.redirect('/login');
 });
 
+// ================= SIGNUP =================
+router.get('/signup', redirectIfAuthenticated, authController.showSignup);
+router.post('/signup', redirectIfAuthenticated, authController.processSignup);
 
-// ================= HOUSEKEEPING ENTRY =================
-// Direct access to housekeeping dashboard (temporary frontend access)
-router.get('/housekeeping', (req, res) => {
-  res.redirect('/housekeeping/dashboard');
-});
+// ================= RECOVERY CODES =================
+router.get('/recovery-codes', authController.showRecoveryCodes);
+router.post('/recovery-codes/continue', authController.acknowledgeRecoveryCodes);
 
+// ================= LOGIN =================
+router.get('/login', redirectIfAuthenticated, authController.showLogin);
+router.post('/login', redirectIfAuthenticated, authController.processLogin);
 
 // ================= LOGOUT =================
-// No session logic yet (frontend only)
-router.get('/logout', (req, res) => {
-  res.redirect('/');
-});
+router.get('/logout', authController.logout);
 
+// ================= FORGOT PASSWORD (Recovery Codes) =================
+router.get('/forgot-password', redirectIfAuthenticated, authController.showForgotPassword);
+router.post('/forgot-password', redirectIfAuthenticated, authController.processForgotPassword);
 
 module.exports = router;
