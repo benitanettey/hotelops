@@ -201,9 +201,9 @@
             <select id="roomSelect" name="roomSelect" required
               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0f766e] focus:border-transparent bg-gray-50">
               <option value="">Choose a room</option>
-              <option value="101">Room 101</option>
-              <option value="102">Room 102</option>
-              <option value="103">Room 103</option>
+              {{#each availableRooms}}
+              <option value="{{this.number}}">Room {{this.number}} ({{this.type}})</option>
+              {{/each}}
             </select>
           </div>
 
@@ -224,59 +224,22 @@
 
         <div class="space-y-3">
 
+          {{#each availableRooms}}
           <div
             class="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:border-[#0f766e] transition">
             <div>
-              <p class="font-semibold text-gray-800">Room 101</p>
-              <p class="text-sm text-gray-500">Single</p>
+              <p class="font-semibold text-gray-800">Room {{this.number}}</p>
+              <p class="text-sm text-gray-500">{{this.type}}</p>
             </div>
-            <span class="text-sm text-gray-400">Floor 1</span>
+            <span class="text-sm text-gray-400">Floor {{this.floor}}</span>
           </div>
+          {{/each}}
 
-          <div
-            class="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:border-[#0f766e] transition">
-            <div>
-              <p class="font-semibold text-gray-800">Room 102</p>
-              <p class="text-sm text-gray-500">Single</p>
-            </div>
-            <span class="text-sm text-gray-400">Floor 1</span>
+          {{#unless availableRooms.length}}
+          <div class="p-4 text-center text-gray-500">
+            <p>No available rooms at the moment</p>
           </div>
-
-          <div
-            class="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:border-[#0f766e] transition">
-            <div>
-              <p class="font-semibold text-gray-800">Room 201</p>
-              <p class="text-sm text-gray-500">Double</p>
-            </div>
-            <span class="text-sm text-gray-400">Floor 2</span>
-          </div>
-
-          <div
-            class="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:border-[#0f766e] transition">
-            <div>
-              <p class="font-semibold text-gray-800">Room 202</p>
-              <p class="text-sm text-gray-500">Double</p>
-            </div>
-            <span class="text-sm text-gray-400">Floor 2</span>
-          </div>
-
-          <div
-            class="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:border-[#0f766e] transition">
-            <div>
-              <p class="font-semibold text-gray-800">Room 301</p>
-              <p class="text-sm text-gray-500">Suite</p>
-            </div>
-            <span class="text-sm text-gray-400">Floor 3</span>
-          </div>
-
-          <div
-            class="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:border-[#0f766e] transition">
-            <div>
-              <p class="font-semibold text-gray-800">Room 302</p>
-              <p class="text-sm text-gray-500">Suite</p>
-            </div>
-            <span class="text-sm text-gray-400">Floor 3</span>
-          </div>
+          {{/unless}}
 
         </div>
       </section>

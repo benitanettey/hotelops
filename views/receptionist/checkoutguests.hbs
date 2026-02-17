@@ -183,33 +183,28 @@
           </thead>
 
           <tbody class="bg-white divide-y divide-gray-200">
-            <!-- Your existing rows remain EXACTLY as written -->
-
-            <!-- BACKEND TODO: Loop through {{occupiedRooms}} array -->
-            <!-- Example: {{#each occupiedRooms}} -->
-
-            <!-- Row 1 -->
+            <!-- Loop through occupiedRooms array -->
+            {{#each occupiedRooms}}
             <tr class="hover:bg-gray-50 transition">
               <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                102
+                {{this.roomNumber}}
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-                John Smith
+                {{this.guestName}}
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                Single
+                {{this.roomType}}
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                2026-02-05
+                {{this.checkInDate}}
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                2026-02-08
+                {{this.expectedCheckOutDate}}
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-sm">
-                <!-- BACKEND TODO: Form should POST to /receptionist/checkout with guestId -->
                 <form method="POST" action="/receptionist/checkout" class="inline">
-                  <input type="hidden" name="guestId" value="guest-001">
-                  <input type="hidden" name="roomNumber" value="102">
+                  <input type="hidden" name="guestId" value="{{this.guestId}}">
+                  <input type="hidden" name="roomNumber" value="{{this.roomNumber}}">
                   <button type="submit"
                     class="bg-[#008080] text-white px-4 py-2 rounded-lg hover:bg-teal-700 transition inline-flex items-center gap-2">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -222,115 +217,24 @@
                 </form>
               </td>
             </tr>
+            {{/each}}
 
-            <!-- Row 2 -->
-            <tr class="hover:bg-gray-50 transition">
-              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                202
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-                Jane Doe
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                Double
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                2026-02-04
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                2026-02-08
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm">
-                <form method="POST" action="/receptionist/checkout" class="inline">
-                  <input type="hidden" name="guestId" value="guest-002">
-                  <input type="hidden" name="roomNumber" value="202">
-                  <button type="submit"
-                    class="bg-[#008080] text-white px-4 py-2 rounded-lg hover:bg-teal-700 transition inline-flex items-center gap-2">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1">
-                      </path>
-                    </svg>
-                    Checkout
-                  </button>
-                </form>
+            {{#unless occupiedRooms.length}}
+            <tr>
+              <td colspan="6" class="px-6 py-12 text-center">
+                <svg class="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                </svg>
+                <h4 class="text-lg font-medium text-gray-900 mb-1">No Occupied Rooms</h4>
+                <p class="text-sm text-gray-500">All rooms are currently available</p>
               </td>
             </tr>
-
-            <!-- Row 3 -->
-            <tr class="hover:bg-gray-50 transition">
-              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                303
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-                Bob Johnson
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                Suite
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                2026-02-06
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                2026-02-09
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm">
-                <form method="POST" action="/receptionist/checkout" class="inline">
-                  <input type="hidden" name="guestId" value="guest-003">
-                  <input type="hidden" name="roomNumber" value="303">
-                  <button type="submit"
-                    class="bg-[#008080] text-white px-4 py-2 rounded-lg hover:bg-teal-700 transition inline-flex items-center gap-2">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1">
-                      </path>
-                    </svg>
-                    Checkout
-                  </button>
-                </form>
-              </td>
-            </tr>
-
-            <!-- {{/each}} -->
+            {{/unless}}
           </tbody>
         </table>
       </div>
 
-      <!-- Empty State (show when no occupied rooms) -->
-      <!-- BACKEND TODO: Show this when occupiedRooms array is empty -->
-      <!-- {{#unless occupiedRooms.length}} -->
-      <!--
-      <div class="p-12 text-center">
-        <svg class="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
-        </svg>
-        <h4 class="text-lg font-medium text-gray-900 mb-1">No Occupied Rooms</h4>
-        <p class="text-sm text-gray-500">All rooms are currently available</p>
-      </div>
-      -->
-      <!-- {{/unless}} -->
     </section>
+
   </main>
 </div>
-
-<!-- BACKEND TODO: Optional - Add JavaScript for client-side search filtering -->
-<!--
-<script>
-  // Client-side search functionality
-  document.getElementById('searchInput').addEventListener('input', function(e) {
-    const searchTerm = e.target.value.toLowerCase();
-    const rows = document.querySelectorAll('tbody tr');
-    
-    rows.forEach(row => {
-      const guestName = row.cells[1].textContent.toLowerCase();
-      const roomNumber = row.cells[0].textContent.toLowerCase();
-      
-      if (guestName.includes(searchTerm) || roomNumber.includes(searchTerm)) {
-        row.style.display = '';
-      } else {
-        row.style.display = 'none';
-      }
-    });
-  });
-</script>
--->

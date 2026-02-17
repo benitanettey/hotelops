@@ -1,49 +1,78 @@
 const express = require('express');
 const router = express.Router();
+const { getAllCleaningTasks } = require('../utils/jsonHelper');
 
 // Housekeepers page (GET)
 router.get('/', (req, res) => {
+  try {
+    // Get all cleaning tasks to calculate stats
+    const allTasks = getAllCleaningTasks();
+    
+    // Calculate stats from actual cleaning tasks
+    const tasksCompleted = allTasks.filter(t => t.status === 'Completed').length;
+    const tasksPending = allTasks.filter(t => t.status === 'Pending').length;
+    const tasksInProgress = allTasks.filter(t => t.status === 'In Progress').length;
+    
+    // Get recent cleanings (completed tasks)
+    const recentCleanups = allTasks
+      .filter(t => t.status === 'Completed')
+      .sort((a, b) => new Date(b.completedDate) - new Date(a.completedDate))
+      .slice(0, 6)
+      .map(task => ({
+        room: task.roomNumber,
+        housekeeper: 'Housekeeping Team',
+        type: task.taskType,
+        time: new Date(task.completedDate).toLocaleString(),
+        priority: task.priority
+      }));
+    
+    // Sample housekeepers for display (static, since housekeepers.json is empty)
+    // In a real system, this would come from housekeepers.json
+    const housekeepers = [
+      { 
+        name: "Housekeeping Team", 
+        location: "All Floors", 
+        workload: tasksPending > 0 ? Math.min(100, (tasksPending / 10) * 100) : 0, 
+        onShift: true,
+        tasksCompleted: tasksCompleted
+      }
+    ];
+    
+    const totalStaff = housekeepers.length;
+    const activeShift = housekeepers.filter(h => h.onShift).length;
+    const overloaded = housekeepers.filter(h => h.workload > 80).length;
 
-  // BACKEND TODO:
-  // 1. Read housekeepers from housekeepers.json
-  // 2. Read cleaningTasks.json to calculate completed tasks
-  // 3. Compute stats dynamically:
-  //    - totalStaff
-  //    - activeShift (onShift === true)
-  //    - tasksCompleted (status === 'Completed')
-  //    - overloaded (workload > 80)
-  // 4. Fetch latest completed cleanings
-  // 5. Sort recentCleanups by latest first
-
-  const housekeepers = [
-    { name: "Maria Gonzalez", location: "Floor 3 & 4", workload: 85, onShift: true },
-    { name: "John Smith", location: "Ground Floor", workload: 50, onShift: true },
-    { name: "Sarah Connor", location: "Pool & Spa", workload: 15, onShift: false }
-  ];
-
-  const recentCleanups = [
-    { room: "402 Executive Suite", housekeeper: "Maria Gonzalez", type: "Standard", time: "10:45 AM (Today)" },
-    { room: "105 Deluxe Twin", housekeeper: "John Smith", type: "Deep Clean", time: "09:12 AM (Today)" }
-  ];
-
-  const totalStaff = housekeepers.length;
-  const activeShift = housekeepers.filter(h => h.onShift).length;
-  const overloaded = housekeepers.filter(h => h.workload > 80).length;
-  const tasksCompleted = 45;
-
-  res.render('receptionist/housekeepers', {
-    layout: 'layouts/main',
-    title: 'Housekeepers',
-    stats: {
-      totalStaff,
-      activeShift,
-      tasksCompleted,
-      overloaded
-    },
-    housekeepers,
-    recentCleanups
-  });
-
+    res.render('receptionist/housekeepers', {
+      layout: 'layouts/main',
+      title: 'Housekeepers',
+      stats: {
+        totalStaff,
+        activeShift,
+        tasksCompleted,
+        overloaded,
+        tasksPending,
+        tasksInProgress
+      },
+      housekeepers,
+      recentCleanups
+    });
+  } catch (error) {
+    console.error('Error loading housekeepers page:', error);
+    res.render('receptionist/housekeepers', {
+      layout: 'layouts/main',
+      title: 'Housekeepers',
+      stats: {
+        totalStaff: 0,
+        activeShift: 0,
+        tasksCompleted: 0,
+        overloaded: 0,
+        tasksPending: 0,
+        tasksInProgress: 0
+      },
+      housekeepers: [],
+      recentCleanups: []
+    });
+  }
 });
 
 module.exports = router;

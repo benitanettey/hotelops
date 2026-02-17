@@ -1,0 +1,122 @@
+[
+  {
+    "id": "task-1771274016475",
+    "roomNumber": "101",
+    "taskType": "Checkout Cleaning",
+    "priority": "High",
+    "instructions": "Clean room after guest checkout. Guest: Michael Masai",
+    "status": "Completed",
+    "createdAt": "2026-02-16T20:33:36.475Z",
+    "completedDate": "2026-02-16T20:45:40.842Z"
+  },
+  {
+    "id": "task-1771274021198",
+    "roomNumber": "201",
+    "taskType": "Checkout Cleaning",
+    "priority": "High",
+    "instructions": "Clean room after guest checkout. Guest: Kelvin Musila",
+    "status": "Completed",
+    "createdAt": "2026-02-16T20:33:41.198Z",
+    "completedDate": "2026-02-16T20:35:13.954Z"
+  },
+  {
+    "id": "task-1771275362923",
+    "roomNumber": "302",
+    "taskType": "Checkout Cleaning",
+    "priority": "High",
+    "instructions": "Clean room after guest checkout. Guest: Michael Masai",
+    "status": "Completed",
+    "createdAt": "2026-02-16T20:56:02.923Z",
+    "completedDate": "2026-02-16T20:57:24.554Z"
+  },
+  {
+    "id": "task-1771275364305",
+    "roomNumber": "102",
+    "taskType": "Checkout Cleaning",
+    "priority": "High",
+    "instructions": "Clean room after guest checkout. Guest: Benita Nettey",
+    "status": "Completed",
+    "createdAt": "2026-02-16T20:56:04.305Z",
+    "completedDate": "2026-02-16T20:57:27.923Z"
+  },
+  {
+    "id": "task-1771275365510",
+    "roomNumber": "303",
+    "taskType": "Checkout Cleaning",
+    "priority": "High",
+    "instructions": "Clean room after guest checkout. Guest: Cristiano Ronaldo",
+    "status": "Completed",
+    "createdAt": "2026-02-16T20:56:05.510Z",
+    "completedDate": "2026-02-16T20:57:29.656Z"
+  },
+  {
+    "id": "task-1771275666641",
+    "roomNumber": "401",
+    "taskType": "Checkout Cleaning",
+    "priority": "High",
+    "instructions": "Clean room after guest checkout. Guest: David Nyende",
+    "status": "Completed",
+    "createdAt": "2026-02-16T21:01:06.641Z",
+    "completedDate": "2026-02-16T21:01:46.299Z"
+  },
+  {
+    "id": "task-1771276550717",
+    "roomNumber": "101",
+    "taskType": "Deep Cleaning",
+    "priority": "High",
+    "instructions": "",
+    "status": "Completed",
+    "createdAt": "2026-02-16T21:15:50.717Z",
+    "completedDate": "2026-02-16T21:16:12.993Z"
+  },
+  {
+    "id": "task-1771276654737",
+    "roomNumber": "303",
+    "taskType": "Turndown Service",
+    "priority": "High",
+    "instructions": "",
+    "status": "Completed",
+    "createdAt": "2026-02-16T21:17:34.737Z",
+    "completedDate": "2026-02-16T21:17:49.472Z"
+  },
+  {
+    "id": "task-1771277369749",
+    "roomNumber": "202",
+    "taskType": "Deep Cleaning",
+    "priority": "Medium",
+    "instructions": "Very Dirty",
+    "status": "Completed",
+    "createdAt": "2026-02-16T21:29:29.749Z",
+    "completedDate": "2026-02-16T21:29:59.706Z"
+  },
+  {
+    "id": "task-1771278366424",
+    "roomNumber": "Restaurant",
+    "taskType": "Deep Cleaning",
+    "priority": "Medium",
+    "instructions": "Alot of food on the floor",
+    "status": "Completed",
+    "createdAt": "2026-02-16T21:46:06.424Z",
+    "completedDate": "2026-02-16T21:46:26.095Z"
+  },
+  {
+    "id": "task-1771278761811",
+    "roomNumber": "201",
+    "taskType": "Checkout Cleaning",
+    "priority": "High",
+    "instructions": "Clean room after guest checkout",
+    "status": "Completed",
+    "createdAt": "2026-02-16T21:52:41.811Z",
+    "completedDate": "2026-02-16T21:53:26.703Z"
+  },
+  {
+    "id": "task-1771278792536",
+    "roomNumber": "Spa",
+    "taskType": "Deep Cleaning",
+    "priority": "High",
+    "instructions": "It is very dirty",
+    "status": "Completed",
+    "createdAt": "2026-02-16T21:53:12.536Z",
+    "completedDate": "2026-02-16T21:53:24.837Z"
+  }
+]

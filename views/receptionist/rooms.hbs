@@ -132,12 +132,49 @@
 
     </div>
 
+    <!-- ================= FILTERING TABS ================= -->
+    <div class="bg-white rounded-xl shadow-sm p-6">
+      <div class="flex flex-wrap gap-3">
+        <button onclick="filterRooms('All')" class="filter-btn px-4 py-2 rounded-lg text-sm font-medium bg-[#0f766e] text-white flex items-center gap-2" data-filter="All">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h12a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V6z"></path>
+          </svg>
+          All ({{totalRooms}})
+        </button>
+        <button onclick="filterRooms('Available')" class="filter-btn px-4 py-2 rounded-lg text-sm font-medium bg-gray-100 text-gray-600 hover:bg-gray-200 flex items-center gap-2" data-filter="Available">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          Available ({{availableRooms}})
+        </button>
+        <button onclick="filterRooms('Occupied')" class="filter-btn px-4 py-2 rounded-lg text-sm font-medium bg-gray-100 text-gray-600 hover:bg-gray-200 flex items-center gap-2" data-filter="Occupied">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.856-1.487M15 10a3 3 0 11-6 0 3 3 0 016 0z"></path>
+          </svg>
+          Occupied ({{occupiedRooms}})
+        </button>
+        <button onclick="filterRooms('Cleaning')" class="filter-btn px-4 py-2 rounded-lg text-sm font-medium bg-gray-100 text-gray-600 hover:bg-gray-200 flex items-center gap-2" data-filter="Cleaning">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m7-4a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          Cleaning ({{cleaningRooms}})
+        </button>
+        <button onclick="filterRooms('Maintenance')" class="filter-btn px-4 py-2 rounded-lg text-sm font-medium bg-gray-100 text-gray-600 hover:bg-gray-200 flex items-center gap-2" data-filter="Maintenance">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4v.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          Maintenance ({{maintenanceRooms}})
+        </button>
+      </div>
+    </div>
+
     <!-- ================= ROOMS TABLE ================= -->
     <div class="bg-white rounded-2xl shadow-sm p-8">
 
       <div class="flex justify-between items-center mb-6">
         <h3 class="text-lg font-semibold text-gray-800">Room List</h3>
-        <input type="text" placeholder="Search rooms..."
+        <input type="text" id="searchInput" placeholder="Search rooms..."
+          onkeyup="searchRooms(this.value)"
           class="border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0f766e] focus:border-transparent">
       </div>
 
@@ -154,10 +191,10 @@
             </tr>
           </thead>
 
-          <tbody class="divide-y divide-gray-100">
+          <tbody class="divide-y divide-gray-100" id="roomsTableBody">
 
             {{#each rooms}}
-            <tr class="hover:bg-gray-50 transition">
+            <tr class="hover:bg-gray-50 transition room-row" data-status="{{status}}" data-room="{{roomNumber}}">
               <td class="py-4 font-medium text-gray-800">{{roomNumber}}</td>
               <td>{{type}}</td>
               <td>{{floor}}</td>
@@ -208,3 +245,49 @@
 
   </main>
 </div>
+
+<script>
+  let currentFilter = 'All';
+
+  function filterRooms(status) {
+    currentFilter = status;
+    const rows = document.querySelectorAll('.room-row');
+    const buttons = document.querySelectorAll('.filter-btn');
+    
+    // Update button styles
+    buttons.forEach(btn => {
+      if (btn.dataset.filter === status) {
+        btn.classList.remove('bg-gray-100', 'text-gray-600', 'hover:bg-gray-200');
+        btn.classList.add('bg-[#0f766e]', 'text-white');
+      } else {
+        btn.classList.add('bg-gray-100', 'text-gray-600', 'hover:bg-gray-200');
+        btn.classList.remove('bg-[#0f766e]', 'text-white');
+      }
+    });
+
+    // Filter rows
+    rows.forEach(row => {
+      if (status === 'All' || row.dataset.status === status) {
+        row.style.display = '';
+      } else {
+        row.style.display = 'none';
+      }
+    });
+  }
+
+  function searchRooms(query) {
+    const rows = document.querySelectorAll('.room-row');
+    const searchTerm = query.toLowerCase();
+    
+    rows.forEach(row => {
+      const roomNumber = row.dataset.room.toLowerCase();
+      const isVisible = row.style.display !== 'none';
+      
+      if (roomNumber.includes(searchTerm) && isVisible) {
+        row.style.display = '';
+      } else if (!roomNumber.includes(searchTerm)) {
+        row.style.display = 'none';
+      }
+    });
+  }
+</script>

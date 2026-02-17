@@ -84,7 +84,7 @@
 
 
     <!-- ================= STATS ================= -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
 
       <div class="bg-white rounded-xl shadow-sm p-6 text-center">
         <p class="text-3xl font-bold text-gray-800">{{stats.totalStaff}}</p>
@@ -99,6 +99,11 @@
       <div class="bg-white rounded-xl shadow-sm p-6 text-center">
         <p class="text-3xl font-bold text-blue-600">{{stats.tasksCompleted}}</p>
         <p class="text-gray-500 text-sm mt-1">Tasks Completed</p>
+      </div>
+
+      <div class="bg-white rounded-xl shadow-sm p-6 text-center">
+        <p class="text-3xl font-bold text-yellow-600">{{stats.tasksPending}}</p>
+        <p class="text-gray-500 text-sm mt-1">Pending Tasks</p>
       </div>
 
     </div>
@@ -176,7 +181,58 @@
 
     </div>
 
-  </main>
+    <!-- ================= RECENT CLEANINGS ================= -->
+    <div class="bg-white rounded-2xl shadow-sm p-8 mt-8">
+
+      <h3 class="text-lg font-semibold text-gray-800 mb-6">
+        Recently Completed Tasks
+      </h3>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+          <thead class="text-gray-500 border-b">
+            <tr>
+              <th class="text-left py-3 font-medium">Room</th>
+              <th class="text-left py-3 font-medium">Housekeeper</th>
+              <th class="text-left py-3 font-medium">Task Type</th>
+              <th class="text-left py-3 font-medium">Completed At</th>
+              <th class="text-left py-3 font-medium">Priority</th>
+            </tr>
+          </thead>
+
+          <tbody class="divide-y divide-gray-100">
+            {{#each recentCleanups}}
+            <tr class="hover:bg-gray-50 transition">
+              <td class="py-4 font-medium text-gray-800">{{room}}</td>
+              <td class="py-4 text-gray-600">{{housekeeper}}</td>
+              <td class="py-4 text-gray-600">{{type}}</td>
+              <td class="py-4 text-gray-500">{{time}}</td>
+              <td class="py-4">
+                {{#if (eq priority "High")}}
+                <span class="px-3 py-1 text-xs rounded-full bg-red-100 text-red-600">High</span>
+                {{else}}
+                {{#if (eq priority "Medium")}}
+                <span class="px-3 py-1 text-xs rounded-full bg-yellow-100 text-yellow-700">Medium</span>
+                {{else}}
+                <span class="px-3 py-1 text-xs rounded-full bg-gray-200 text-gray-600">Low</span>
+                {{/if}}
+                {{/if}}
+              </td>
+            </tr>
+            {{/each}}
+
+            {{#unless recentCleanups.length}}
+            <tr>
+              <td colspan="5" class="py-6 text-center text-gray-400">
+                No recent cleanings
+              </td>
+            </tr>
+            {{/unless}}
+          </tbody>
+        </table>
+      </div>
+
+    </div>
 </div>
 
 <!-- ================= ANIMATION STYLES ================= -->

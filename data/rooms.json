@@ -1,0 +1,102 @@
+[
+  {
+    "id": "room-101",
+    "number": "101",
+    "type": "Single",
+    "floor": 1,
+    "status": "Occupied",
+    "occupiedBy": "guest-1771278555553",
+    "checkInDate": "2026-02-04",
+    "checkOutDate": "2026-02-12"
+  },
+  {
+    "id": "room-102",
+    "number": "102",
+    "type": "Single",
+    "floor": 1,
+    "status": "Available",
+    "occupiedBy": null,
+    "checkInDate": null,
+    "checkOutDate": null
+  },
+  {
+    "id": "room-201",
+    "number": "201",
+    "type": "Double",
+    "floor": 2,
+    "status": "Available",
+    "occupiedBy": null,
+    "checkInDate": null,
+    "checkOutDate": null
+  },
+  {
+    "id": "room-202",
+    "number": "202",
+    "type": "Double",
+    "floor": 2,
+    "status": "Available",
+    "occupiedBy": null,
+    "checkInDate": null,
+    "checkOutDate": null
+  },
+  {
+    "id": "room-203",
+    "number": "203",
+    "type": "Double",
+    "floor": 2,
+    "status": "Available",
+    "occupiedBy": null,
+    "checkInDate": null,
+    "checkOutDate": null
+  },
+  {
+    "id": "room-301",
+    "number": "301",
+    "type": "Suite",
+    "floor": 3,
+    "status": "Available",
+    "occupiedBy": null,
+    "checkInDate": null,
+    "checkOutDate": null
+  },
+  {
+    "id": "room-302",
+    "number": "302",
+    "type": "Suite",
+    "floor": 3,
+    "status": "Available",
+    "occupiedBy": null,
+    "checkInDate": null,
+    "checkOutDate": null
+  },
+  {
+    "id": "room-303",
+    "number": "303",
+    "type": "Suite",
+    "floor": 3,
+    "status": "Available",
+    "occupiedBy": null,
+    "checkInDate": null,
+    "checkOutDate": null
+  },
+  {
+    "id": "room-401",
+    "number": "401",
+    "type": "Deluxe",
+    "floor": 4,
+    "status": "Available",
+    "occupiedBy": null,
+    "checkInDate": null,
+    "checkOutDate": null
+  },
+  {
+    "id": "room-402",
+    "number": "402",
+    "type": "Deluxe",
+    "floor": 4,
+    "status": "Available",
+    "occupiedBy": null,
+    "checkInDate": null,
+    "checkOutDate": null
+  }
+]
