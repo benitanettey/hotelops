@@ -15,11 +15,16 @@ app.use(express.json());
 // Static files (MUST be before routes)
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Session
+// Session configuration
 app.use(session({
-  secret: 'hotelopssecret',
+  secret: process.env.SESSION_SECRET || 'hotelops-development-secret-change-in-production',
   resave: false,
-  saveUninitialized: true
+  saveUninitialized: false, // Changed to false for better security
+  cookie: {
+    maxAge: 24 * 60 * 60 * 1000, // 24 hours
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production' // HTTPS only in production
+  }
 }));
 
 // ================= VIEW ENGINE =================

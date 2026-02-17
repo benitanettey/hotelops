@@ -1,0 +1,66 @@
+[
+  {
+    "id": "user-295a3f2e-c1cf-4d36-8423-486a6aa73f75",
+    "username": "musila",
+    "password": "$2b$10$ukGqUyqLdXistm/hgPGyoOUrVsAYEQboUPHR.99DGBaZKpQgOTf8K",
+    "role": "receptionist",
+    "name": "Kelvin Maingi Musila",
+    "recoveryCodes": [
+      {
+        "hashedCode": "$2b$10$AIXAW44OcJRYT.VBbuszW.tYvbZUme0aZgT4Nfg8a9B4vH0ZpUMoy",
+        "used": true
+      },
+      {
+        "hashedCode": "$2b$10$2NXjFz86/mZx5VuWa/YZ3.U8feU7lrsG.yxEygI53MbSBIjQ104gq",
+        "used": false
+      },
+      {
+        "hashedCode": "$2b$10$wP.8/n.m7Q6EbWnEZ/l9wOs38seFYZHzXJANpUt39BkGiYnoZQAzy",
+        "used": false
+      },
+      {
+        "hashedCode": "$2b$10$f0J4uf3tbQXY1.q6/g6lPeZowqno6AkPvH5QQm3O4/6R7yk7lR4Em",
+        "used": false
+      },
+      {
+        "hashedCode": "$2b$10$3sdF4zP0KKzduM8SJB4Yt.iQFCUArkKyPCyZMtQLOkzcd6GupMIdW",
+        "used": false
+      }
+    ],
+    "createdAt": "2026-02-16T18:12:59.489Z",
+    "accountLockedUntil": null,
+    "failedLoginAttempts": 0
+  },
+  {
+    "id": "user-89290fe5-c6cf-4969-bad5-51f8d1d9eb7e",
+    "username": "k1",
+    "password": "$2b$10$m6FQlkrFT1b05spzi2jqfeIB2oD30LktPEJSzth7Z8BWsTlDdZXj2",
+    "role": "housekeeper",
+    "name": "K12345",
+    "recoveryCodes": [
+      {
+        "hashedCode": "$2b$10$jJ3OTSYIUfIWfA2yCg6GGe/aH9Tmq4HctdGb7GhXkqVxeYqKVHuPa",
+        "used": false
+      },
+      {
+        "hashedCode": "$2b$10$jgQrX4Q/XN.c39XJYnXwIuu5JV1ShhmJjF0QmrxvX2l/kjXHGfLtm",
+        "used": false
+      },
+      {
+        "hashedCode": "$2b$10$/AaBLvck4ZcV.ehpl/hL4eXb24eLNGeLWglNvgZZfYObZ7m33EARS",
+        "used": false
+      },
+      {
+        "hashedCode": "$2b$10$0tF3FpoUvGqHCyANiwIzX.6JYQ/6EYW9cjsvhgsv0IdS7WB4ee0EG",
+        "used": false
+      },
+      {
+        "hashedCode": "$2b$10$8Zycv8eH/KcYDDtIh.84C.SDhTkSPh59bCPlB/QDFHUTJvvBaa29y",
+        "used": false
+      }
+    ],
+    "createdAt": "2026-02-16T18:28:57.186Z",
+    "accountLockedUntil": null,
+    "failedLoginAttempts": 0
+  }
+]

@@ -43,78 +43,123 @@
 
 <div class="min-h-screen bg-gray-100">
 
-  <!-- ================= TOP HEADER ================= -->
-  <header class="bg-[#0f766e] shadow-sm">
-    <div class="max-w-7xl mx-auto px-6">
+  <!-- ================= UNIFIED HEADER ================= -->
+  <header class="bg-white shadow-sm sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
       <div class="flex items-center justify-between h-16">
-
+        <!-- Logo and Brand (Far Left) -->
         <div class="flex items-center gap-3">
-          <div class="bg-white/20 p-2 rounded-lg">
-            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div class="bg-[#008080] text-white p-2 rounded-lg">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4">
+              </path>
             </svg>
           </div>
-          <div>
-            <h1 class="text-white font-semibold text-lg">StaySync</h1>
-            <p class="text-white/80 text-xs">Receptionist Portal</p>
-          </div>
+          <h1 class="text-xl font-bold text-gray-800">StaySync</h1>
         </div>
 
-        <div class="w-28 h-9 bg-white/30 rounded-lg"></div>
+        <!-- Desktop Navigation Links (Center) - Hidden on mobile -->
+        <nav class="hidden md:flex flex-1 justify-center">
+          <ul class="flex items-center gap-6">
+            <li>
+              <a href="/receptionist/dashboard"
+                class="text-sm font-medium text-gray-600 hover:text-[#008080] transition">
+                Dashboard
+              </a>
+            </li>
+            <li>
+              <a href="/receptionist/checkingguests"
+                class="text-sm font-medium text-gray-600 hover:text-[#008080] transition">
+                Check-In
+              </a>
+            </li>
+            <li>
+              <a href="/receptionist/checkoutguests"
+                class="text-sm font-medium text-gray-900 hover:text-[#008080] transition">
+                Checkout
+              </a>
+            </li>
+            <li>
+              <a href="/receptionist/rooms" class="text-sm font-medium text-gray-600 hover:text-[#008080] transition">
+                Rooms
+              </a>
+            </li>
+            <li>
+              <a href="/receptionist/cleaning-requests"
+                class="text-sm font-medium text-gray-600 hover:text-[#008080] transition">
+                Cleaning Request
+              </a>
+            </li>
+            <li>
+              <a href="/receptionist/housekeepers"
+                class="text-sm font-medium text-gray-600 hover:text-[#008080] transition">
+                Housekeepers
+              </a>
+            </li>
+          </ul>
+        </nav>
+
+        <!-- Right Side Icons (Far Right) - Hidden on mobile -->
+        <div class="hidden md:flex items-center gap-4">
+          <!-- User Profile -->
+          <div class="w-8 h-8 bg-[#008080] rounded-full flex items-center justify-center text-white text-sm font-medium">
+            R
+          </div>
+
+          <!-- Logout Button -->
+          <button onclick="showLogoutModal()" class="flex items-center gap-2 text-gray-600 hover:text-red-600 transition" title="Logout">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+            </svg>
+            <span class="text-sm font-medium">Logout</span>
+          </button>
+        </div>
+
+        <!-- Mobile menu button -->
+        <button onclick="toggleMobileMenu()" class="md:hidden p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100">
+          <svg id="menu-icon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+          </svg>
+          <svg id="close-icon" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Navigation Menu (Hidden by default) -->
+    <div id="mobile-menu" class="hidden md:hidden border-t border-gray-200">
+      <div class="px-4 py-3 space-y-1">
+        <a href="/receptionist/dashboard" class="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50">
+          Dashboard
+        </a>
+        <a href="/receptionist/checkingguests" class="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50">
+          Check-In
+        </a>
+        <a href="/receptionist/checkoutguests" class="block px-3 py-2 rounded-md text-sm font-medium text-gray-900 bg-gray-50">
+          Checkout
+        </a>
+        <a href="/receptionist/rooms" class="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50">
+          Rooms
+        </a>
+        <a href="/receptionist/cleaning-requests" class="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50">
+          Cleaning Request
+        </a>
+        <a href="/receptionist/housekeepers" class="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50">
+          Housekeepers
+        </a>
+        <div class="border-t border-gray-200 my-2 pt-2">
+          <button onclick="showLogoutModal()" class="w-full text-left px-3 py-2 rounded-md text-sm font-medium text-red-600 hover:bg-red-50 flex items-center gap-2">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+            </svg>
+            <span>Logout</span>
+          </button>
+        </div>
       </div>
     </div>
   </header>
-
-  <!-- ================= SECONDARY NAV ================= -->
-  <nav class="bg-white border-b">
-    <div class="max-w-7xl mx-auto px-6">
-      <ul class="flex items-center gap-8 text-sm font-medium text-gray-600 h-12">
-
-        <li>
-          <a href="/receptionist/dashboard"
-            class="{{#if (eq title 'Dashboard')}}text-[#0f766e] border-b-2 border-[#0f766e] pb-2{{else}}hover:text-[#0f766e]{{/if}}">
-            Dashboard
-          </a>
-        </li>
-
-        <li>
-          <a href="/receptionist/checkingguests"
-            class="{{#if (eq title 'Check-In')}}text-[#0f766e] border-b-2 border-[#0f766e] pb-2{{else}}hover:text-[#0f766e]{{/if}}">
-            Check-In
-          </a>
-        </li>
-
-        <li>
-          <a href="/receptionist/checkoutguests" class="text-[#0f766e] border-b-2 border-[#0f766e] pb-2">
-            Checkout
-          </a>
-        </li>
-
-        <li>
-          <a href="/receptionist/rooms"
-            class="{{#if (eq title 'Room Management')}}text-[#0f766e] border-b-2 border-[#0f766e] pb-2{{else}}hover:text-[#0f766e]{{/if}}">
-            Rooms
-          </a>
-        </li>
-
-        <li>
-          <a href="/receptionist/cleaning-requests"
-            class="{{#if (eq title 'Cleaning Requests')}}text-[#0f766e] border-b-2 border-[#0f766e] pb-2{{else}}hover:text-[#0f766e]{{/if}}">
-            Cleaning Requests
-          </a>
-        </li>
-
-        <li>
-          <a href="/receptionist/housekeepers"
-            class="{{#if (eq title 'Housekeepers')}}text-[#0f766e] border-b-2 border-[#0f766e] pb-2{{else}}hover:text-[#0f766e]{{/if}}">
-            Housekeepers
-          </a>
-        </li>
-
-      </ul>
-    </div>
-  </nav>
 
   <!-- ================= MAIN ================= -->
   <main class="max-w-7xl mx-auto px-6 py-10 animate-fadeInUp">
@@ -311,6 +356,52 @@
       <!-- {{/unless}} -->
     </section>
   </main>
+
+  <!-- Logout Confirmation Modal -->
+  <div id="logoutModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+    <div class="bg-white rounded-lg shadow-xl p-5 w-72 mx-4">
+      <div class="text-center mb-4">
+        <div class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-3">
+          <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+          </svg>
+        </div>
+        <h3 class="text-base font-semibold text-gray-800">Logout?</h3>
+      </div>
+      <div class="flex gap-3">
+        <button onclick="hideLogoutModal()" class="flex-1 bg-gray-200 text-gray-700 px-3 py-2 rounded-lg hover:bg-gray-300 transition font-medium text-sm">
+          Cancel
+        </button>
+        <a href="/logout" class="flex-1 bg-red-600 text-white px-3 py-2 rounded-lg hover:bg-red-700 transition font-medium text-center text-sm">
+          Logout
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function showLogoutModal() {
+      document.getElementById('logoutModal').classList.remove('hidden');
+    }
+    function hideLogoutModal() {
+      document.getElementById('logoutModal').classList.add('hidden');
+    }
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') hideLogoutModal();
+    });
+
+    // Mobile menu toggle
+    function toggleMobileMenu() {
+      const menu = document.getElementById('mobile-menu');
+      const menuIcon = document.getElementById('menu-icon');
+      const closeIcon = document.getElementById('close-icon');
+      
+      menu.classList.toggle('hidden');
+      menuIcon.classList.toggle('hidden');
+      closeIcon.classList.toggle('hidden');
+    }
+  </script>
+
 </div>
 
 <!-- BACKEND TODO: Optional - Add JavaScript for client-side search filtering -->

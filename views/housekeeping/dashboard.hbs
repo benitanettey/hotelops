@@ -23,7 +23,7 @@
 
   <!-- ================= TOP HEADER ================= -->
   <header class="bg-[#0a5c56] shadow-sm">
-    <div class="max-w-7xl mx-auto px-6">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
       <div class="flex justify-between items-center h-16 text-white">
 
         <!-- Logo -->
@@ -32,25 +32,76 @@
           <p class="text-xs opacity-80">Housekeeping Portal</p>
         </div>
 
-        <!-- Active Toggle -->
+        <!-- Right Side: Toggle + Logout - Hidden on mobile -->
+        <div class="hidden md:flex items-center gap-3">
+          <!-- Active Toggle -->
+          <form method="POST" action="/housekeeping/toggle-status">
+            <button
+              class="flex items-center gap-3 bg-white/10 px-4 py-1.5 rounded-full backdrop-blur-sm border border-white/20 hover:bg-white/20 transition">
+
+              <span class="text-sm font-medium">
+                {{#if housekeeper.isActive}}Active{{else}}Offline{{/if}}
+              </span>
+
+              <span class="relative inline-flex items-center h-5 w-9 rounded-full 
+                {{#if housekeeper.isActive}}bg-green-500{{else}}bg-gray-400{{/if}}">
+                <span class="inline-block w-4 h-4 transform bg-white rounded-full transition 
+                  {{#if housekeeper.isActive}}translate-x-4{{else}}translate-x-1{{/if}}">
+                </span>
+              </span>
+
+            </button>
+          </form>
+
+          <!-- Logout Button -->
+          <button onclick="showLogoutModal()" class="flex items-center gap-2 bg-white/10 hover:bg-white/20 px-4 py-1.5 rounded-full backdrop-blur-sm border border-white/20 transition group">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+            </svg>
+            <span class="text-sm font-medium">Logout</span>
+          </button>
+        </div>
+
+        <!-- Mobile menu button -->
+        <button onclick="toggleMobileMenu()" class="md:hidden p-2 rounded-md text-white hover:bg-white/10">
+          <svg id="menu-icon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+          </svg>
+          <svg id="close-icon" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Navigation Menu (Hidden by default) -->
+    <div id="mobile-menu" class="hidden md:hidden border-t border-white/20">
+      <div class="px-4 py-3 space-y-2">
+        <!-- Active Toggle (Mobile) -->
         <form method="POST" action="/housekeeping/toggle-status">
           <button
-            class="flex items-center gap-3 bg-white/10 px-4 py-1.5 rounded-full backdrop-blur-sm border border-white/20 hover:bg-white/20 transition">
-
+            class="w-full flex items-center justify-between bg-white/10 px-4 py-2 rounded-lg backdrop-blur-sm border border-white/20 hover:bg-white/20 transition">
             <span class="text-sm font-medium">
               {{#if housekeeper.isActive}}Active{{else}}Offline{{/if}}
             </span>
-
             <span class="relative inline-flex items-center h-5 w-9 rounded-full 
               {{#if housekeeper.isActive}}bg-green-500{{else}}bg-gray-400{{/if}}">
               <span class="inline-block w-4 h-4 transform bg-white rounded-full transition 
                 {{#if housekeeper.isActive}}translate-x-4{{else}}translate-x-1{{/if}}">
               </span>
             </span>
-
           </button>
         </form>
-
+        
+        <!-- Logout (Mobile) -->
+        <div class="border-t border-white/20 pt-2">
+          <button onclick="showLogoutModal()" class="w-full text-left px-4 py-2 rounded-lg text-sm font-medium text-white hover:bg-white/10 flex items-center gap-2">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+            </svg>
+            <span>Logout</span>
+          </button>
+        </div>
       </div>
     </div>
   </header>
@@ -207,6 +258,53 @@
     </div>
 
   </main>
+
+  <!-- Logout Confirmation Modal -->
+  <div id="logoutModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+    <div class="bg-white rounded-lg shadow-xl p-5 max-w-xs w-full mx-4 animate-fadeIn">
+      <div class="text-center mb-4">
+        <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-3">
+          <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+          </svg>
+        </div>
+        <h3 class="text-lg font-semibold text-gray-800 mb-1">Confirm Logout</h3>
+        <p class="text-sm text-gray-600">Are you sure?</p>
+      </div>
+      <div class="flex gap-2">
+        <button onclick="hideLogoutModal()" class="flex-1 bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300 transition font-medium text-sm">
+          Cancel
+        </button>
+        <a href="/logout" class="flex-1 bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition font-medium text-center text-sm">
+          Yes, Logout
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function showLogoutModal() {
+      document.getElementById('logoutModal').classList.remove('hidden');
+    }
+    function hideLogoutModal() {
+      document.getElementById('logoutModal').classList.add('hidden');
+    }
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') hideLogoutModal();
+    });
+
+    // Mobile menu toggle
+    function toggleMobileMenu() {
+      const menu = document.getElementById('mobile-menu');
+      const menuIcon = document.getElementById('menu-icon');
+      const closeIcon = document.getElementById('close-icon');
+      
+      menu.classList.toggle('hidden');
+      menuIcon.classList.toggle('hidden');
+      closeIcon.classList.toggle('hidden');
+    }
+  </script>
+
 </div>
 
 <!-- ================= FADE ANIMATION ================= -->
