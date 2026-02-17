@@ -4,10 +4,10 @@
     "number": "101",
     "type": "Single",
     "floor": 1,
-    "status": "Occupied",
-    "occupiedBy": "guest-1771278555553",
-    "checkInDate": "2026-02-04",
-    "checkOutDate": "2026-02-12"
+    "status": "Available",
+    "occupiedBy": null,
+    "checkInDate": null,
+    "checkOutDate": null
   },
   {
     "id": "room-102",

@@ -118,5 +118,15 @@
     "status": "Completed",
     "createdAt": "2026-02-16T21:53:12.536Z",
     "completedDate": "2026-02-16T21:53:24.837Z"
+  },
+  {
+    "id": "task-1771332950027",
+    "roomNumber": "101",
+    "taskType": "Checkout Cleaning",
+    "priority": "High",
+    "instructions": "Clean room after guest checkout",
+    "status": "Completed",
+    "createdAt": "2026-02-17T12:55:50.027Z",
+    "completedDate": "2026-02-17T12:56:02.115Z"
   }
 ]

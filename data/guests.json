@@ -93,8 +93,9 @@
     "checkInDate": "2026-02-04",
     "checkOutDate": "2026-02-12",
     "roomNumber": "101",
-    "status": "checked-in",
-    "createdAt": "2026-02-16T21:49:15.553Z"
+    "status": "checked-out",
+    "createdAt": "2026-02-16T21:49:15.553Z",
+    "actualCheckOutDate": "2026-02-17T12:55:50.021Z"
   },
   {
     "id": "guest-1771278708805",
