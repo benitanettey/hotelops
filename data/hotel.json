@@ -1,13 +1,1 @@
-{
-  "id": "hotel-88577284-fed0-4fc6-bced-16f628b972cc",
-  "name": "Qwetu Hostel",
-  "roomTypes": [
-    {
-      "name": "single",
-      "count": 100
-    }
-  ],
-  "createdBy": "user-3d008eac-c62f-4377-b544-a1fef73f0143",
-  "createdAt": "2026-02-17T15:26:30.126Z",
-  "updatedAt": "2026-02-17T15:26:30.126Z"
-}
+{"id": null, "name": "", "roomTypes": []}
