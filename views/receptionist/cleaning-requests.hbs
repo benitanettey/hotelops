@@ -11,7 +11,7 @@
             </path>
           </svg>
         </div>
-        <h1 class="text-xl font-bold text-gray-800">StaySync</h1>
+        <h1 class="text-xl font-bold text-gray-800">{{hotelName}}</h1>
       </div>
 
       <!-- Desktop Navigation Links (Center) - Hidden on mobile -->
@@ -57,10 +57,10 @@
 
       <!-- Right Side Icons (Far Right) - Hidden on mobile -->
       <div class="hidden md:flex items-center gap-4">
-        <!-- User Profile -->
-        <div class="w-8 h-8 bg-[#008080] rounded-full flex items-center justify-center text-white text-sm font-medium">
-          R
-        </div>
+        <!-- User Profile - Links to Settings -->
+        <a href="/receptionist/settings" class="w-8 h-8 bg-[#008080] rounded-full flex items-center justify-center text-white text-sm font-medium hover:bg-teal-700 transition" title="Settings">
+          {{userInitial}}
+        </a>
 
         <!-- Logout Button -->
         <button onclick="showLogoutModal()" class="flex items-center gap-2 text-gray-600 hover:text-red-600 transition" title="Logout">
@@ -155,7 +155,7 @@
 
           <span class="w-2 h-2 bg-yellow-400 rounded-full animate-pulse"></span>
 
-          {{cleaningRequests.length}} Active Requests
+          {{activeRequests}} Active Requests
         </div>
 
       </div>
@@ -173,28 +173,41 @@
         New Cleaning Request
       </h3>
 
-      <!-- // BACKEND TODO: POST /receptionist/cleaning-requests -->
       <form method="POST" action="/receptionist/cleaning-requests" class="space-y-5">
 
+        <!-- Location Type Toggle -->
         <div>
+          <label class="text-sm font-medium text-gray-600 mb-2 block">
+            Location Type
+          </label>
+          <div class="flex gap-2">
+            <button type="button" id="roomTypeBtn" onclick="setLocationType('room')"
+              class="flex-1 px-4 py-2 rounded-lg text-sm font-medium transition border border-gray-200 bg-[#0f766e] text-white">
+              Room
+            </button>
+            <button type="button" id="customTypeBtn" onclick="setLocationType('custom')"
+              class="flex-1 px-4 py-2 rounded-lg text-sm font-medium transition border border-gray-200 bg-gray-50 text-gray-600 hover:bg-gray-100">
+              Custom Location
+            </button>
+          </div>
+        </div>
+
+        <!-- Room Number (shown by default) -->
+        <div id="roomNumberField">
           <label class="text-sm font-medium text-gray-600">
             Room Number
           </label>
-          <input type="text" name="roomNumber" placeholder="e.g., 101" required
+          <input type="text" name="roomNumber" id="roomNumberInput" placeholder="e.g., 101"
             class="w-full mt-1 px-4 py-2 rounded-lg bg-gray-50 border border-gray-200 focus:ring-2 focus:ring-[#0f766e] focus:border-transparent outline-none">
         </div>
 
-        <div>
+        <!-- Custom Location (hidden by default) -->
+        <div id="customLocationField" class="hidden">
           <label class="text-sm font-medium text-gray-600">
-            Cleaning Type
+            Location Name
           </label>
-          <select name="serviceType"
+          <input type="text" name="location" id="locationInput" placeholder="e.g., Lobby, Gym, Pool Area"
             class="w-full mt-1 px-4 py-2 rounded-lg bg-gray-50 border border-gray-200 focus:ring-2 focus:ring-[#0f766e] focus:border-transparent outline-none">
-            <option value="Daily Cleaning">Daily Cleaning</option>
-            <option value="Checkout Cleaning">Checkout Cleaning</option>
-            <option value="Deep Cleaning">Deep Cleaning</option>
-            <option value="Turndown Service">Turndown Service</option>
-          </select>
         </div>
 
         <div>
@@ -204,7 +217,6 @@
           <select name="priority"
             class="w-full mt-1 px-4 py-2 rounded-lg bg-gray-50 border border-gray-200 focus:ring-2 focus:ring-[#0f766e] focus:border-transparent outline-none">
             <option value="Low">Low</option>
-            <option value="Medium" selected>Medium</option>
             <option value="High">High</option>
           </select>
         </div>
@@ -236,8 +248,7 @@
 
           <thead class="text-gray-500 border-b">
             <tr>
-              <th class="text-left py-3 font-medium">Room</th>
-              <th class="text-left py-3 font-medium">Type</th>
+              <th class="text-left py-3 font-medium">Location</th>
               <th class="text-left py-3 font-medium">Priority</th>
               <th class="text-left py-3 font-medium">Status</th>
               <th class="text-left py-3 font-medium">Assigned</th>
@@ -251,18 +262,19 @@
             {{#each cleaningRequests}}
             <tr class="hover:bg-gray-50 transition">
 
-              <td class="py-3">{{roomNumber}}</td>
-              <td class="py-3">{{serviceType}}</td>
+              <td class="py-3">
+                {{#if roomNumber}}
+                  <span class="font-medium">Room {{roomNumber}}</span>
+                {{else}}
+                  <span class="text-teal-600">{{location}}</span>
+                {{/if}}
+              </td>
 
               <td class="py-3">
                 {{#if (eq priority "High")}}
                 <span class="px-3 py-1 text-xs rounded-full bg-red-100 text-red-600">High</span>
                 {{else}}
-                {{#if (eq priority "Medium")}}
-                <span class="px-3 py-1 text-xs rounded-full bg-yellow-100 text-yellow-700">Medium</span>
-                {{else}}
                 <span class="px-3 py-1 text-xs rounded-full bg-gray-200 text-gray-600">Low</span>
-                {{/if}}
                 {{/if}}
               </td>
 
@@ -348,6 +360,38 @@
     menu.classList.toggle('hidden');
     menuIcon.classList.toggle('hidden');
     closeIcon.classList.toggle('hidden');
+  }
+
+  // Location type toggle (room vs custom location)
+  function setLocationType(type) {
+    const roomBtn = document.getElementById('roomTypeBtn');
+    const customBtn = document.getElementById('customTypeBtn');
+    const roomField = document.getElementById('roomNumberField');
+    const customField = document.getElementById('customLocationField');
+    const roomInput = document.getElementById('roomNumberInput');
+    const locationInput = document.getElementById('locationInput');
+    
+    if (type === 'room') {
+      roomBtn.classList.remove('bg-gray-50', 'text-gray-600', 'hover:bg-gray-100');
+      roomBtn.classList.add('bg-[#0f766e]', 'text-white');
+      customBtn.classList.remove('bg-[#0f766e]', 'text-white');
+      customBtn.classList.add('bg-gray-50', 'text-gray-600', 'hover:bg-gray-100');
+      roomField.classList.remove('hidden');
+      customField.classList.add('hidden');
+      roomInput.required = true;
+      locationInput.required = false;
+      locationInput.value = '';
+    } else {
+      customBtn.classList.remove('bg-gray-50', 'text-gray-600', 'hover:bg-gray-100');
+      customBtn.classList.add('bg-[#0f766e]', 'text-white');
+      roomBtn.classList.remove('bg-[#0f766e]', 'text-white');
+      roomBtn.classList.add('bg-gray-50', 'text-gray-600', 'hover:bg-gray-100');
+      customField.classList.remove('hidden');
+      roomField.classList.add('hidden');
+      locationInput.required = true;
+      roomInput.required = false;
+      roomInput.value = '';
+    }
   }
 </script>
 

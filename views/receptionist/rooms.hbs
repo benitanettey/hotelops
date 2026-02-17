@@ -13,7 +13,7 @@
               </path>
             </svg>
           </div>
-          <h1 class="text-xl font-bold text-gray-800">StaySync</h1>
+          <h1 class="text-xl font-bold text-gray-800">{{hotelName}}</h1>
         </div>
 
         <!-- Desktop Navigation Links (Center) - Hidden on mobile -->
@@ -59,10 +59,10 @@
 
         <!-- Right Side Icons (Far Right) - Hidden on mobile -->
         <div class="hidden md:flex items-center gap-4">
-          <!-- User Profile -->
-          <div class="w-8 h-8 bg-[#008080] rounded-full flex items-center justify-center text-white text-sm font-medium">
-            R
-          </div>
+          <!-- User Profile - Links to Settings -->
+          <a href="/receptionist/settings" class="w-8 h-8 bg-[#008080] rounded-full flex items-center justify-center text-white text-sm font-medium hover:bg-teal-700 transition" title="Settings">
+            {{userInitial}}
+          </a>
 
           <!-- Logout Button -->
           <button onclick="showLogoutModal()" class="flex items-center gap-2 text-gray-600 hover:text-red-600 transition" title="Logout">
@@ -145,7 +145,7 @@
     </div>
 
     <!-- ================= SUMMARY CARDS ================= -->
-    <div class="grid grid-cols-1 sm:grid-cols-5 gap-6">
+    <div class="grid grid-cols-1 sm:grid-cols-4 gap-6">
 
       <div class="bg-white rounded-xl shadow-sm p-6 text-center border border-teal-600">
         <p class="text-3xl font-bold text-teal-700">{{totalRooms}}</p>
@@ -167,11 +167,6 @@
         <p class="text-gray-500 text-sm mt-1">Cleaning</p>
       </div>
 
-      <div class="bg-white rounded-xl shadow-sm p-6 text-center">
-        <p class="text-3xl font-bold text-red-500">{{maintenanceRooms}}</p>
-        <p class="text-gray-500 text-sm mt-1">Maintenance</p>
-      </div>
-
     </div>
 
     <!-- ================= ROOMS TABLE ================= -->
@@ -179,7 +174,7 @@
 
       <div class="flex justify-between items-center mb-6">
         <h3 class="text-lg font-semibold text-gray-800">Room List</h3>
-        <input type="text" placeholder="Search rooms..."
+        <input type="text" id="roomSearch" placeholder="Search rooms..." onkeyup="filterRooms()"
           class="border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0f766e] focus:border-transparent">
       </div>
 
@@ -189,21 +184,17 @@
             <tr class="text-left text-gray-500 border-b">
               <th class="py-3">Room Number</th>
               <th>Type</th>
-              <th>Floor</th>
               <th>Status</th>
               <th>Guest</th>
-              <th>Actions</th>
             </tr>
           </thead>
 
-          <tbody class="divide-y divide-gray-100">
+          <tbody id="roomsTableBody" class="divide-y divide-gray-100">
 
             {{#each rooms}}
             <tr class="hover:bg-gray-50 transition">
               <td class="py-4 font-medium text-gray-800">{{roomNumber}}</td>
               <td>{{type}}</td>
-              <td>{{floor}}</td>
-
               <td>
                 {{#if (eq status "Available")}}
                 <span class="px-3 py-1 rounded-full text-xs bg-green-100 text-green-700">Available</span>
@@ -216,25 +207,11 @@
                 {{#if (eq status "Cleaning")}}
                 <span class="px-3 py-1 rounded-full text-xs bg-orange-100 text-orange-700">Cleaning</span>
                 {{/if}}
-
-                {{#if (eq status "Maintenance")}}
-                <span class="px-3 py-1 rounded-full text-xs bg-red-100 text-red-700">Maintenance</span>
-                {{/if}}
               </td>
 
-              <td>
+              <td class="max-w-[150px]">
                 {{#if guest}}
-                {{guest}}
-                {{else}}
-                -
-                {{/if}}
-              </td>
-
-              <td>
-                {{#if (eq status "Cleaning")}}
-                <button class="bg-[#0f766e] text-white px-4 py-1 rounded-lg text-xs hover:bg-teal-700 transition">
-                  Mark Cleaned
-                </button>
+                <span class="block truncate" title="{{guest}}">{{guest}}</span>
                 {{else}}
                 -
                 {{/if}}
@@ -292,6 +269,29 @@
       menu.classList.toggle('hidden');
       menuIcon.classList.toggle('hidden');
       closeIcon.classList.toggle('hidden');
+    }
+
+    // Room search/filter function
+    function filterRooms() {
+      const searchInput = document.getElementById('roomSearch');
+      const filter = searchInput.value.toLowerCase();
+      const tbody = document.getElementById('roomsTableBody');
+      const rows = tbody.getElementsByTagName('tr');
+
+      for (let i = 0; i < rows.length; i++) {
+        const cells = rows[i].getElementsByTagName('td');
+        let match = false;
+        
+        for (let j = 0; j < cells.length; j++) {
+          const cellText = cells[j].textContent || cells[j].innerText;
+          if (cellText.toLowerCase().indexOf(filter) > -1) {
+            match = true;
+            break;
+          }
+        }
+        
+        rows[i].style.display = match ? '' : 'none';
+      }
     }
   </script>
 

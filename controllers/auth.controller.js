@@ -3,9 +3,12 @@ const { v4: uuidv4 } = require('uuid');
 const path = require('path');
 const { readJSON, writeJSON } = require('../utils/jsonHelper');
 const { getDashboardPath } = require('../utils/roleHelper');
+const { generateRooms } = require('../utils/roomHelper');
 
 const USER_FILE = path.join(__dirname, '../data/user.json');
 const RESET_LOGS_FILE = path.join(__dirname, '../data/passwordResetLogs.json');
+const HOTEL_FILE = path.join(__dirname, '../data/hotel.json');
+const ROOMS_FILE = path.join(__dirname, '../data/rooms.json');
 
 // Security Constants
 const RECOVERY_CODES_COUNT = 5;
@@ -18,11 +21,27 @@ const MIN_PASSWORD_LENGTH = 8;
 /**
  * Show signup page
  */
-exports.showSignup = (req, res) => {
-  res.render('auth/signup', {
-    title: 'Sign Up - StaySync',
-    error: null
-  });
+exports.showSignup = async (req, res) => {
+  try {
+    // Check if hotel is already configured
+    const hotel = await readJSON(HOTEL_FILE);
+    const hotelConfigured = hotel && hotel.id !== null;
+    
+    res.render('auth/signup', {
+      title: 'Sign Up - StaySync',
+      error: null,
+      info: !hotelConfigured ? 'As the first receptionist, you will configure the hotel and become the admin.' : null,
+      showHotelConfig: !hotelConfigured // Show hotel config for first receptionist
+    });
+  } catch (error) {
+    console.error('Show signup error:', error);
+    res.render('auth/signup', {
+      title: 'Sign Up - StaySync',
+      error: null,
+      info: null,
+      showHotelConfig: true
+    });
+  }
 };
 
 /**
@@ -30,38 +49,58 @@ exports.showSignup = (req, res) => {
  */
 exports.processSignup = async (req, res) => {
   try {
-    const { username, password, confirmPassword, name, role } = req.body;
+    const { username, password, confirmPassword, name, role, hotelName, roomTypes } = req.body;
+    
+    // Check if hotel is already configured
+    const hotel = await readJSON(HOTEL_FILE);
+    const hotelConfigured = hotel && hotel.id !== null;
+    
+    // Helper function to render with showHotelConfig
+    const renderError = (error) => {
+      return res.render('auth/signup', {
+        title: 'Sign Up - StaySync',
+        error: error,
+        info: null,
+        showHotelConfig: !hotelConfigured
+      });
+    };
     
     // Validation
     if (!username || !password || !confirmPassword || !name || !role) {
-      return res.render('auth/signup', {
-        title: 'Sign Up - StaySync',
-        error: 'All fields are required'
-      });
+      return renderError('All fields are required');
     }
     
     // Password match check
     if (password !== confirmPassword) {
-      return res.render('auth/signup', {
-        title: 'Sign Up - StaySync',
-        error: 'Passwords do not match'
-      });
+      return renderError('Passwords do not match');
     }
     
     // Password strength validation
     if (password.length < MIN_PASSWORD_LENGTH) {
-      return res.render('auth/signup', {
-        title: 'Sign Up - StaySync',
-        error: `Password must be at least ${MIN_PASSWORD_LENGTH} characters long`
-      });
+      return renderError(`Password must be at least ${MIN_PASSWORD_LENGTH} characters long`);
     }
     
     // Role validation
     if (!['receptionist', 'housekeeper'].includes(role)) {
-      return res.render('auth/signup', {
-        title: 'Sign Up - StaySync',
-        error: 'Invalid role selected'
-      });
+      return renderError('Invalid role selected');
+    }
+    
+    // Block housekeeper signup if hotel not configured
+    if (!hotelConfigured && role === 'housekeeper') {
+      return renderError('A receptionist must set up the hotel first. Please wait for your hotel to be configured.');
+    }
+    
+    // If hotel not configured and role is receptionist, validate hotel config
+    if (!hotelConfigured && role === 'receptionist') {
+      if (!hotelName || !hotelName.trim()) {
+        return renderError('Hotel name is required for first receptionist');
+      }
+      
+      // Validate room types - at least one room type should have count > 0
+      const totalRooms = roomTypes ? roomTypes.reduce((sum, rt) => sum + (parseInt(rt.count) || 0), 0) : 0;
+      if (totalRooms === 0) {
+        return renderError('Please add at least one room to the hotel');
+      }
     }
     
     // Check if username already exists
@@ -69,10 +108,7 @@ exports.processSignup = async (req, res) => {
     const existingUser = users.find(u => u.username === username.toLowerCase());
     
     if (existingUser) {
-      return res.render('auth/signup', {
-        title: 'Sign Up - StaySync',
-        error: 'Username already exists'
-      });
+      return renderError('Username already exists');
     }
     
     // Hash password
@@ -98,6 +134,7 @@ exports.processSignup = async (req, res) => {
       password: hashedPassword,
       role: role,
       name: name.trim(),
+      isAdmin: !hotelConfigured && role === 'receptionist', // First receptionist is admin
       recoveryCodes: recoveryCodes.map(rc => ({ hashedCode: rc.hashedCode, used: false })),
       createdAt: new Date().toISOString(),
       accountLockedUntil: null,
@@ -108,11 +145,34 @@ exports.processSignup = async (req, res) => {
     users.push(newUser);
     await writeJSON(USER_FILE, users);
     
+    // If hotel not configured and role is receptionist, set up hotel and rooms
+    if (!hotelConfigured && role === 'receptionist') {
+      // Create hotel configuration
+      const newHotel = {
+        id: `hotel-${uuidv4()}`,
+        name: hotelName.trim(),
+        roomTypes: roomTypes.filter(rt => parseInt(rt.count) > 0).map(rt => ({
+          name: rt.name,
+          count: parseInt(rt.count)
+        })),
+        createdBy: newUser.id,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      };
+      
+      await writeJSON(HOTEL_FILE, newHotel);
+      
+      // Generate rooms
+      const rooms = generateRooms(newHotel.roomTypes);
+      await writeJSON(ROOMS_FILE, rooms);
+    }
+    
     // Auto-login after signup
     req.session.userId = newUser.id;
     req.session.username = newUser.username;
     req.session.role = newUser.role;
     req.session.name = newUser.name;
+    req.session.isAdmin = newUser.isAdmin || false;
     req.session.isAuthenticated = true;
     
     // Store plain codes in session for one-time display
@@ -265,6 +325,7 @@ exports.processLogin = async (req, res) => {
     req.session.username = user.username;
     req.session.role = user.role;
     req.session.name = user.name;
+    req.session.isAdmin = user.isAdmin || false;
     req.session.isAuthenticated = true;
     
     // Redirect based on role

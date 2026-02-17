@@ -43,6 +43,27 @@ hbs.registerHelper('eq', function (a, b) {
   return a === b;
 });
 
+hbs.registerHelper('lte', function (a, b) {
+  return a <= b;
+});
+
+hbs.registerHelper('gte', function (a, b) {
+  return a >= b;
+});
+
+hbs.registerHelper('gt', function (a, b) {
+  return a > b;
+});
+
+hbs.registerHelper('lt', function (a, b) {
+  return a < b;
+});
+
+hbs.registerHelper('substring', function (str, start, end) {
+  if (typeof str !== 'string') return '';
+  return str.substring(start, end);
+});
+
 // ================= ROUTES =================
 
 const authRoutes = require('./routes/auth.routes');

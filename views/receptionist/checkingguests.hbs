@@ -1,26 +1,3 @@
-<!-- 
-  GUEST CHECK-IN PAGE
-  This page allows receptionists to check in guests and assign them to available rooms.
-  
-  BACKEND TODO:
-  - Pass availableRooms array with room numbers and types from controller
-  - Handle POST request from check-in form to create new guest entry
-  - Validate all form fields before submission
-  - Assign selected room to guest and update room status to 'Occupied'
-  - Create guest record in guests.json with all form data
-  - Redirect to dashboard or show success message after check-in
-  
-  FORM FIELDS:
-  - firstName: Guest's first name
-  - lastName: Guest's last name
-  - email: Guest's email address
-  - phone: Guest's phone number
-  - idNumber: Guest's ID/passport number
-  - checkInDate: Check-in date
-  - checkOutDate: Expected check-out date
-  - roomSelect: Selected room number (dropdown populated from availableRooms)
--->
-
 <style>
   @keyframes fadeInUp {
     from {
@@ -54,7 +31,7 @@
               </path>
             </svg>
           </div>
-          <h1 class="text-xl font-bold text-gray-800">StaySync</h1>
+          <h1 class="text-xl font-bold text-gray-800">{{hotelName}}</h1>
         </div>
 
         <!-- Desktop Navigation Links (Center) - Hidden on mobile -->
@@ -100,10 +77,10 @@
 
         <!-- Right Side Icons (Far Right) - Hidden on mobile -->
         <div class="hidden md:flex items-center gap-4">
-          <!-- User Profile -->
-          <div class="w-8 h-8 bg-[#008080] rounded-full flex items-center justify-center text-white text-sm font-medium">
-            R
-          </div>
+          <!-- User Profile - Links to Settings -->
+          <a href="/receptionist/settings" class="w-8 h-8 bg-[#008080] rounded-full flex items-center justify-center text-white text-sm font-medium hover:bg-teal-700 transition" title="Settings">
+            {{userInitial}}
+          </a>
 
           <!-- Logout Button -->
           <button onclick="showLogoutModal()" class="flex items-center gap-2 text-gray-600 hover:text-red-600 transition" title="Logout">
@@ -160,206 +137,212 @@
   </header>
 
   <!-- ================= MAIN ================= -->
-  <main class="max-w-7xl mx-auto px-6 py-10 space-y-10 animate-fadeInUp">
+  <main class="max-w-7xl mx-auto px-6 py-8 space-y-8 animate-fadeInUp">
 
-    <!-- ================= HERO (NARROW + GLASS) ================= -->
-    <section class="relative rounded-2xl overflow-hidden h-[190px] shadow-md">
-
-      <img src="/images/hotel-room.jpg" alt="Premium Hotel Room" class="absolute inset-0 w-full h-full object-cover">
-
-      <!-- Teal Overlay -->
-      <div class="absolute inset-0 bg-[#0f766e]/85"></div>
-
-      <!-- Glass Panel -->
-      <div class="relative z-10 h-full flex items-center">
-
-        <div class="ml-10 backdrop-blur-md bg-white/10 
-                    border border-white/20 
-                    rounded-xl px-8 py-6 
-                    shadow-lg">
-
-          <h3 class="text-2xl font-bold text-white mb-2">
-            Premium Accommodations
-          </h3>
-
-          <p class="text-white/90 text-sm">
-            Find the perfect room for your guests
-          </p>
-
+    <!-- ================= COMPACT HERO ================= -->
+    <section class="relative rounded-xl overflow-hidden h-[120px] shadow-md">
+      <div class="absolute inset-0 bg-gradient-to-r from-[#0f766e] via-[#14b8a6] to-[#0f766e]/80"></div>
+      <div class="relative z-10 h-full flex items-center justify-between px-8">
+        <div>
+          <h3 class="text-xl font-bold text-white">Guest Check-In</h3>
+          <p class="text-white/80 text-sm">Register new guests and assign rooms</p>
         </div>
-
+        <div class="bg-white/20 backdrop-blur-sm rounded-lg px-4 py-2 border border-white/30">
+          <p class="text-white text-sm font-medium">{{totalAvailable}} rooms available</p>
+        </div>
       </div>
-
     </section>
 
-    <!-- ================= FORM + ROOMS ================= -->
-    <div class="grid grid-cols-1 lg:grid-cols-5 gap-8">
+    {{#if error}}
+    <div class="p-4 bg-red-50 border border-red-200 rounded-lg flex items-center gap-3">
+      <svg class="w-5 h-5 text-red-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+      </svg>
+      <p class="text-sm text-red-700">{{error}}</p>
+    </div>
+    {{/if}}
 
-      <!-- FORM -->
-      <section class="bg-white rounded-lg shadow-sm p-8 lg:col-span-3">
-        <h3 class="text-xl font-semibold text-gray-800 mb-6">Guest Information</h3>
+    {{#if success}}
+    <div class="p-4 bg-green-50 border border-green-200 rounded-lg flex items-center gap-3">
+      <svg class="w-5 h-5 text-green-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+      </svg>
+      <p class="text-sm text-green-700">{{success}}</p>
+    </div>
+    {{/if}}
 
-        <!-- BACKEND TODO: Form action should POST to /receptionist/checkin -->
-        <form method="POST" action="/receptionist/checkin" class="space-y-6">
+    <!-- ================= TWO COLUMN LAYOUT ================= -->
+    <div class="grid grid-cols-1 xl:grid-cols-2 gap-8">
 
+      <!-- LEFT: ROOM SELECTION -->
+      <section class="bg-white rounded-xl shadow-sm overflow-hidden">
+        <div class="p-6 border-b border-gray-100">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-semibold text-gray-800">Select Room</h3>
+            <!-- Search -->
+            <div class="relative">
+              <input type="text" id="roomSearch" placeholder="Search rooms..."
+                class="pl-9 pr-4 py-2 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#0f766e] focus:border-transparent w-48">
+              <svg class="w-4 h-4 text-gray-400 absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+              </svg>
+            </div>
+          </div>
 
+          <!-- Room Type Filter Tabs -->
+          <div class="flex flex-wrap gap-2" id="roomTypeTabs">
+            <button type="button" data-type="all" class="room-type-tab active px-4 py-2 text-sm font-medium rounded-lg bg-[#0f766e] text-white transition">
+              All ({{totalAvailable}})
+            </button>
+            {{#each roomTypeStats}}
+            <button type="button" data-type="{{name}}" class="room-type-tab px-4 py-2 text-sm font-medium rounded-lg bg-gray-100 text-gray-600 hover:bg-gray-200 transition capitalize">
+              {{name}} ({{count}})
+            </button>
+            {{/each}}
+          </div>
+        </div>
+
+        <!-- Room Grid -->
+        <div class="p-6">
+          <div id="roomGrid" class="grid grid-cols-2 sm:grid-cols-3 gap-3 max-h-[400px] overflow-y-auto">
+            <!-- Rooms will be rendered by JavaScript -->
+          </div>
+
+          <!-- Pagination Info -->
+          <div id="paginationInfo" class="mt-4 flex items-center justify-between text-sm text-gray-500">
+            <span id="showingInfo">Showing 0 rooms</span>
+            <button type="button" id="loadMoreBtn" class="hidden text-[#0f766e] hover:text-teal-700 font-medium">
+              Load more
+            </button>
+          </div>
+
+          <!-- No rooms message -->
+          <div id="noRoomsMessage" class="hidden text-center py-8">
+            <svg class="w-12 h-12 mx-auto mb-3 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+            </svg>
+            <p class="text-gray-500">No rooms match your criteria</p>
+          </div>
+        </div>
+
+        <!-- Selected Room Summary -->
+        <div id="selectedRoomSummary" class="hidden border-t border-gray-100 p-4 bg-teal-50">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-sm text-gray-600">Selected Room</p>
+              <p class="font-semibold text-[#0f766e]" id="selectedRoomDisplay">-</p>
+            </div>
+            <button type="button" onclick="clearRoomSelection()" class="text-sm text-gray-500 hover:text-red-500">
+              Clear
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- RIGHT: GUEST FORM -->
+      <section class="bg-white rounded-xl shadow-sm p-6">
+        <h3 class="text-lg font-semibold text-gray-800 mb-6">Guest Information</h3>
+
+        <form method="POST" action="/receptionist/checkin" id="checkinForm" class="space-y-5">
+          <!-- Hidden field for selected room -->
+          <input type="hidden" id="roomSelect" name="roomSelect" required>
+          <!-- Hidden field for additional guests -->
+          <input type="hidden" id="additionalGuests" name="additionalGuests" value="[]">
+
+          <!-- Primary Guest Label -->
+          <div class="flex items-center gap-2 pb-2 border-b border-gray-100">
+            <span class="bg-[#0f766e] text-white text-xs px-2 py-1 rounded">Primary</span>
+            <span class="text-sm text-gray-600">Lead guest (must be 18+)</span>
+          </div>
 
           <!-- Name Fields -->
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="grid grid-cols-2 gap-4">
             <div>
-              <label for="firstName" class="block text-sm font-medium text-gray-700 mb-2">
-                First Name
-              </label>
+              <label for="firstName" class="block text-sm font-medium text-gray-700 mb-1">First Name</label>
               <input type="text" id="firstName" name="firstName" required
-                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0f766e] focus:border-transparent bg-gray-50">
+                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0f766e] focus:border-transparent text-sm">
             </div>
-
             <div>
-              <label for="lastName" class="block text-sm font-medium text-gray-700 mb-2">
-                Last Name
-              </label>
+              <label for="lastName" class="block text-sm font-medium text-gray-700 mb-1">Last Name</label>
               <input type="text" id="lastName" name="lastName" required
-                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0f766e] focus:border-transparent bg-gray-50">
+                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0f766e] focus:border-transparent text-sm">
             </div>
           </div>
 
           <!-- Contact Fields -->
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="grid grid-cols-2 gap-4">
             <div>
-              <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
-                Email
-              </label>
+              <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
               <input type="email" id="email" name="email" required
-                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0f766e] focus:border-transparent bg-gray-50">
+                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0f766e] focus:border-transparent text-sm">
             </div>
-
             <div>
-              <label for="phone" class="block text-sm font-medium text-gray-700 mb-2">
-                Phone Number
-              </label>
+              <label for="phone" class="block text-sm font-medium text-gray-700 mb-1">Phone</label>
               <input type="tel" id="phone" name="phone" required
-                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0f766e] focus:border-transparent bg-gray-50">
+                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0f766e] focus:border-transparent text-sm">
             </div>
           </div>
 
           <!-- ID Number -->
           <div>
-            <label for="idNumber" class="block text-sm font-medium text-gray-700 mb-2">
-              ID Number
-            </label>
+            <label for="idNumber" class="block text-sm font-medium text-gray-700 mb-1">ID/Passport Number</label>
             <input type="text" id="idNumber" name="idNumber" required
-              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0f766e] focus:border-transparent bg-gray-50">
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0f766e] focus:border-transparent text-sm">
           </div>
 
           <!-- Date Fields -->
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="grid grid-cols-2 gap-4">
             <div>
-              <label for="checkInDate" class="block text-sm font-medium text-gray-700 mb-2">
-                Check-In Date
-              </label>
+              <label for="checkInDate" class="block text-sm font-medium text-gray-700 mb-1">Check-In</label>
               <input type="date" id="checkInDate" name="checkInDate" required
-                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0f766e] focus:border-transparent bg-gray-50">
+                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0f766e] focus:border-transparent text-sm">
             </div>
-
             <div>
-              <label for="checkOutDate" class="block text-sm font-medium text-gray-700 mb-2">
-                Check-Out Date
-              </label>
+              <label for="checkOutDate" class="block text-sm font-medium text-gray-700 mb-1">Check-Out</label>
               <input type="date" id="checkOutDate" name="checkOutDate" required
-                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0f766e] focus:border-transparent bg-gray-50">
+                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0f766e] focus:border-transparent text-sm">
             </div>
           </div>
 
-          <!-- Room Selection -->
-          <div>
-            <label for="roomSelect" class="block text-sm font-medium text-gray-700 mb-2">
-              Select Room
-            </label>
-            <select id="roomSelect" name="roomSelect" required
-              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0f766e] focus:border-transparent bg-gray-50">
-              <option value="">Choose a room</option>
-              <option value="101">Room 101</option>
-              <option value="102">Room 102</option>
-              <option value="103">Room 103</option>
-            </select>
+          <!-- Stay Duration & Estimate -->
+          <div id="stayEstimate" class="hidden p-3 bg-gray-50 rounded-lg">
+            <div class="flex items-center justify-between text-sm">
+              <span class="text-gray-600">Est. stay: <span id="nightsCount" class="font-medium">0</span> night(s)</span>
+              <span class="text-[#0f766e] font-semibold">~$<span id="estimatedCost">0</span></span>
+            </div>
           </div>
 
-          <!-- Submit Button -->
-          <div class="pt-4">
-            <button type="submit"
-              class="w-full bg-[#0f766e] text-white px-8 py-3 rounded-lg hover:bg-teal-700 transition font-medium">
-              Check In Guest
-            </button>
+          <!-- Additional Guests Section -->
+          <div class="border-t border-gray-100 pt-4">
+            <div class="flex items-center justify-between mb-3">
+              <div>
+                <h4 class="text-sm font-medium text-gray-700">Additional Guests</h4>
+                <p class="text-xs text-gray-500">Add other guests staying in this room</p>
+              </div>
+              <button type="button" onclick="addGuest()" class="text-sm text-[#0f766e] hover:text-teal-700 font-medium flex items-center gap-1">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                </svg>
+                Add Guest
+              </button>
+            </div>
+            <div id="additionalGuestsList" class="space-y-3">
+              <!-- Additional guests will be added here -->
+            </div>
+            <div id="guestSummary" class="hidden mt-3 text-sm text-gray-600 bg-gray-50 rounded-lg p-3">
+              <span id="adultCount">1</span> adult(s), <span id="childCount">0</span> child(ren)
+            </div>
           </div>
 
+          <!-- Submit -->
+          <button type="submit" id="submitBtn" disabled
+            class="w-full bg-gray-300 text-gray-500 px-6 py-3 rounded-lg font-medium cursor-not-allowed transition">
+            Select a room to continue
+          </button>
         </form>
       </section>
 
-      <!-- Available Rooms List - Takes 2 columns (40%) -->
-      <section class="bg-white rounded-lg shadow-sm p-8 lg:col-span-2">
-        <h3 class="text-xl font-semibold text-gray-800 mb-6">Available Rooms</h3>
-
-        <div class="space-y-3">
-
-          <div
-            class="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:border-[#0f766e] transition">
-            <div>
-              <p class="font-semibold text-gray-800">Room 101</p>
-              <p class="text-sm text-gray-500">Single</p>
-            </div>
-            <span class="text-sm text-gray-400">Floor 1</span>
-          </div>
-
-          <div
-            class="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:border-[#0f766e] transition">
-            <div>
-              <p class="font-semibold text-gray-800">Room 102</p>
-              <p class="text-sm text-gray-500">Single</p>
-            </div>
-            <span class="text-sm text-gray-400">Floor 1</span>
-          </div>
-
-          <div
-            class="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:border-[#0f766e] transition">
-            <div>
-              <p class="font-semibold text-gray-800">Room 201</p>
-              <p class="text-sm text-gray-500">Double</p>
-            </div>
-            <span class="text-sm text-gray-400">Floor 2</span>
-          </div>
-
-          <div
-            class="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:border-[#0f766e] transition">
-            <div>
-              <p class="font-semibold text-gray-800">Room 202</p>
-              <p class="text-sm text-gray-500">Double</p>
-            </div>
-            <span class="text-sm text-gray-400">Floor 2</span>
-          </div>
-
-          <div
-            class="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:border-[#0f766e] transition">
-            <div>
-              <p class="font-semibold text-gray-800">Room 301</p>
-              <p class="text-sm text-gray-500">Suite</p>
-            </div>
-            <span class="text-sm text-gray-400">Floor 3</span>
-          </div>
-
-          <div
-            class="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:border-[#0f766e] transition">
-            <div>
-              <p class="font-semibold text-gray-800">Room 302</p>
-              <p class="text-sm text-gray-500">Suite</p>
-            </div>
-            <span class="text-sm text-gray-400">Floor 3</span>
-          </div>
-
-        </div>
-      </section>
-
     </div>
-
   </main>
 
   <!-- Logout Confirmation Modal -->
@@ -385,6 +368,264 @@
   </div>
 
   <script>
+    // Room data from server
+    const allRooms = {{{availableRoomsJSON}}};
+    let filteredRooms = [...allRooms];
+    let displayedCount = 12;
+    let selectedRoom = null;
+    let additionalGuests = [];
+    let guestIdCounter = 0;
+
+    // DOM Elements
+    const roomGrid = document.getElementById('roomGrid');
+    const roomSearch = document.getElementById('roomSearch');
+    const showingInfo = document.getElementById('showingInfo');
+    const loadMoreBtn = document.getElementById('loadMoreBtn');
+    const noRoomsMessage = document.getElementById('noRoomsMessage');
+    const selectedRoomSummary = document.getElementById('selectedRoomSummary');
+    const selectedRoomDisplay = document.getElementById('selectedRoomDisplay');
+    const roomSelectInput = document.getElementById('roomSelect');
+    const submitBtn = document.getElementById('submitBtn');
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', function() {
+      renderRooms();
+      setupEventListeners();
+      setDefaultDates();
+    });
+
+    function setDefaultDates() {
+      const today = new Date().toISOString().split('T')[0];
+      document.getElementById('checkInDate').value = today;
+      document.getElementById('checkInDate').min = today;
+      document.getElementById('checkOutDate').min = today;
+    }
+
+    function setupEventListeners() {
+      // Room type tabs
+      document.querySelectorAll('.room-type-tab').forEach(tab => {
+        tab.addEventListener('click', function() {
+          document.querySelectorAll('.room-type-tab').forEach(t => {
+            t.classList.remove('bg-[#0f766e]', 'text-white');
+            t.classList.add('bg-gray-100', 'text-gray-600');
+          });
+          this.classList.remove('bg-gray-100', 'text-gray-600');
+          this.classList.add('bg-[#0f766e]', 'text-white');
+          filterRooms();
+        });
+      });
+
+      // Search
+      roomSearch.addEventListener('input', filterRooms);
+
+      // Load more
+      loadMoreBtn.addEventListener('click', function() {
+        displayedCount += 12;
+        renderRooms();
+      });
+
+      // Date change for estimate
+      document.getElementById('checkInDate').addEventListener('change', updateEstimate);
+      document.getElementById('checkOutDate').addEventListener('change', updateEstimate);
+    }
+
+    function filterRooms() {
+      const activeTab = document.querySelector('.room-type-tab.bg-\\[\\#0f766e\\]');
+      const selectedType = activeTab?.dataset.type || 'all';
+      const searchTerm = roomSearch.value.toLowerCase();
+
+      filteredRooms = allRooms.filter(room => {
+        const matchesType = selectedType === 'all' || room.type === selectedType;
+        const matchesSearch = room.number.toLowerCase().includes(searchTerm) || 
+                              room.type.toLowerCase().includes(searchTerm);
+        return matchesType && matchesSearch;
+      });
+
+      displayedCount = 12;
+      renderRooms();
+    }
+
+    function renderRooms() {
+      const toDisplay = filteredRooms.slice(0, displayedCount);
+      
+      if (filteredRooms.length === 0) {
+        roomGrid.innerHTML = '';
+        noRoomsMessage.classList.remove('hidden');
+        showingInfo.textContent = 'No rooms found';
+        loadMoreBtn.classList.add('hidden');
+        return;
+      }
+
+      noRoomsMessage.classList.add('hidden');
+      roomGrid.innerHTML = toDisplay.map(room => `
+        <div class="room-card p-3 border-2 rounded-lg cursor-pointer transition hover:border-[#0f766e] hover:shadow-sm ${selectedRoom?.number === room.number ? 'border-[#0f766e] bg-teal-50' : 'border-gray-200'}"
+             data-room='${JSON.stringify(room)}'>
+          <div class="flex items-center justify-between mb-1">
+            <span class="font-semibold text-gray-800">${room.number}</span>
+            ${selectedRoom?.number === room.number ? '<svg class="w-5 h-5 text-[#0f766e]" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>' : ''}
+          </div>
+          <p class="text-xs text-gray-500 capitalize">${room.type}</p>
+          <p class="text-sm text-[#0f766e] font-medium mt-1">$${room.price}/night</p>
+        </div>
+      `).join('');
+
+      // Update pagination info
+      showingInfo.textContent = `Showing ${toDisplay.length} of ${filteredRooms.length} rooms`;
+      loadMoreBtn.classList.toggle('hidden', toDisplay.length >= filteredRooms.length);
+
+      // Add click handlers
+      document.querySelectorAll('.room-card').forEach(card => {
+        card.addEventListener('click', function() {
+          selectRoom(JSON.parse(this.dataset.room));
+        });
+      });
+    }
+
+    function selectRoom(room) {
+      selectedRoom = room;
+      roomSelectInput.value = room.number;
+      selectedRoomDisplay.textContent = `Room ${room.number} - ${room.type} ($${room.price}/night)`;
+      selectedRoomSummary.classList.remove('hidden');
+      
+      // Enable submit button
+      submitBtn.disabled = false;
+      submitBtn.classList.remove('bg-gray-300', 'text-gray-500', 'cursor-not-allowed');
+      submitBtn.classList.add('bg-[#0f766e]', 'text-white', 'hover:bg-teal-700');
+      submitBtn.textContent = 'Check In Guest';
+
+      renderRooms();
+      updateEstimate();
+    }
+
+    function clearRoomSelection() {
+      selectedRoom = null;
+      roomSelectInput.value = '';
+      selectedRoomSummary.classList.add('hidden');
+      document.getElementById('stayEstimate').classList.add('hidden');
+      
+      // Disable submit button
+      submitBtn.disabled = true;
+      submitBtn.classList.add('bg-gray-300', 'text-gray-500', 'cursor-not-allowed');
+      submitBtn.classList.remove('bg-[#0f766e]', 'text-white', 'hover:bg-teal-700');
+      submitBtn.textContent = 'Select a room to continue';
+
+      renderRooms();
+    }
+
+    function updateEstimate() {
+      const checkIn = document.getElementById('checkInDate').value;
+      const checkOut = document.getElementById('checkOutDate').value;
+      const stayEstimate = document.getElementById('stayEstimate');
+
+      if (checkIn && checkOut && selectedRoom) {
+        const nights = Math.ceil((new Date(checkOut) - new Date(checkIn)) / (1000 * 60 * 60 * 24));
+        if (nights > 0) {
+          document.getElementById('nightsCount').textContent = nights;
+          document.getElementById('estimatedCost').textContent = (nights * selectedRoom.price).toLocaleString();
+          stayEstimate.classList.remove('hidden');
+        } else {
+          stayEstimate.classList.add('hidden');
+        }
+      } else {
+        stayEstimate.classList.add('hidden');
+      }
+    }
+
+    // Additional Guests Management
+    function addGuest() {
+      const guestId = ++guestIdCounter;
+      const guestDiv = document.createElement('div');
+      guestDiv.className = 'p-4 bg-gray-50 rounded-lg border border-gray-200';
+      guestDiv.id = `guest-${guestId}`;
+      guestDiv.innerHTML = `
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-sm font-medium text-gray-700">Guest ${document.getElementById('additionalGuestsList').children.length + 2}</span>
+          <button type="button" onclick="removeGuest(${guestId})" class="p-1 text-gray-400 hover:text-red-500 transition">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+        </div>
+        <div class="grid grid-cols-2 gap-3 mb-3">
+          <input type="text" placeholder="First name" class="guest-firstName px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0f766e] focus:border-transparent" required>
+          <input type="text" placeholder="Last name" class="guest-lastName px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0f766e] focus:border-transparent" required>
+        </div>
+        <div class="grid grid-cols-2 gap-3 mb-3">
+          <input type="email" placeholder="Email (optional)" class="guest-email px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0f766e] focus:border-transparent">
+          <input type="tel" placeholder="Phone (optional)" class="guest-phone px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0f766e] focus:border-transparent">
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <input type="text" placeholder="ID/Passport (optional)" class="guest-idNumber px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0f766e] focus:border-transparent">
+          <select class="guest-type px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0f766e] focus:border-transparent">
+            <option value="adult">Adult (18+)</option>
+            <option value="child">Child</option>
+          </select>
+        </div>
+      `;
+      document.getElementById('additionalGuestsList').appendChild(guestDiv);
+      updateGuestData();
+      document.getElementById('guestSummary').classList.remove('hidden');
+    }
+
+    function removeGuest(guestId) {
+      document.getElementById(`guest-${guestId}`)?.remove();
+      updateGuestData();
+      if (document.getElementById('additionalGuestsList').children.length === 0) {
+        document.getElementById('guestSummary').classList.add('hidden');
+      }
+    }
+
+    function updateGuestData() {
+      const guestElements = document.querySelectorAll('#additionalGuestsList > div');
+      additionalGuests = [];
+      let adults = 1; // Primary guest
+      let children = 0;
+
+      guestElements.forEach((el, index) => {
+        const firstName = el.querySelector('.guest-firstName')?.value || '';
+        const lastName = el.querySelector('.guest-lastName')?.value || '';
+        const email = el.querySelector('.guest-email')?.value || '';
+        const phone = el.querySelector('.guest-phone')?.value || '';
+        const idNumber = el.querySelector('.guest-idNumber')?.value || '';
+        const type = el.querySelector('.guest-type')?.value || 'adult';
+        const isAdult = type === 'adult';
+        
+        additionalGuests.push({ 
+          firstName,
+          lastName,
+          fullName: `${firstName} ${lastName}`.trim(),
+          email,
+          phone,
+          idNumber,
+          isAdult 
+        });
+        if (isAdult) adults++; else children++;
+        
+        // Update guest number label
+        const label = el.querySelector('span.text-sm.font-medium');
+        if (label) label.textContent = `Guest ${index + 2}`;
+      });
+
+      document.getElementById('additionalGuests').value = JSON.stringify(additionalGuests);
+      document.getElementById('adultCount').textContent = adults;
+      document.getElementById('childCount').textContent = children;
+    }
+
+    // Update guest data on any change
+    document.getElementById('additionalGuestsList').addEventListener('change', updateGuestData);
+    document.getElementById('additionalGuestsList').addEventListener('input', updateGuestData);
+
+    // Form validation
+    document.getElementById('checkinForm').addEventListener('submit', function(e) {
+      if (!selectedRoom) {
+        e.preventDefault();
+        alert('Please select a room');
+        return;
+      }
+      updateGuestData();
+    });
+
+    // Logout modal
     function showLogoutModal() {
       document.getElementById('logoutModal').classList.remove('hidden');
     }
@@ -400,7 +641,6 @@
       const menu = document.getElementById('mobile-menu');
       const menuIcon = document.getElementById('menu-icon');
       const closeIcon = document.getElementById('close-icon');
-      
       menu.classList.toggle('hidden');
       menuIcon.classList.toggle('hidden');
       closeIcon.classList.toggle('hidden');

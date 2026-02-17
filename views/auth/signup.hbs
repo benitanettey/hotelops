@@ -40,7 +40,13 @@
         </div>
         {{/if}}
 
-        <form method="POST" action="/signup" class="space-y-4">
+        {{#if info}}
+        <div class="mb-4 bg-blue-50 border border-blue-200 text-blue-700 px-4 py-3 rounded-lg">
+          <p class="text-sm">{{info}}</p>
+        </div>
+        {{/if}}
+
+        <form method="POST" action="/signup" class="space-y-4" id="signupForm">
           
           <!-- Username -->
           <div>
@@ -81,13 +87,88 @@
               id="role" 
               name="role" 
               required
+              onchange="toggleHotelConfig()"
               class="w-full px-4 py-2.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#008080] focus:border-transparent bg-gray-50"
             >
               <option value="">Select your role</option>
               <option value="receptionist">Receptionist</option>
               <option value="housekeeper">Housekeeper</option>
             </select>
+            {{#if showHotelConfig}}
+            <div id="housekeeperWarning" class="hidden mt-2 bg-red-100 border-2 border-red-500 text-red-700 px-3 py-2 rounded-lg">
+              <p class="text-sm font-bold">A receptionist must set up the hotel first before housekeepers can sign up.</p>
+            </div>
+            {{/if}}
           </div>
+
+          <!-- Hotel Configuration Section (Hidden by default, shown for first receptionist) -->
+          {{#if showHotelConfig}}
+          <div id="hotelConfigSection" class="hidden space-y-4 p-4 bg-teal-50 rounded-lg border border-teal-200">
+            <div class="flex items-center gap-2 mb-2">
+              <svg class="w-5 h-5 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+              </svg>
+              <h3 class="text-sm font-semibold text-teal-800">Hotel Setup (Admin Configuration)</h3>
+            </div>
+            <p class="text-xs text-teal-700 mb-3">As the first receptionist, you will be the admin.</p>
+            
+            <!-- Hotel Name -->
+            <div>
+              <label for="hotelName" class="block text-sm font-medium text-gray-700 mb-1">
+                Hotel Name
+              </label>
+              <input 
+                type="text" 
+                id="hotelName" 
+                name="hotelName" 
+                class="w-full px-4 py-2.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#008080] focus:border-transparent bg-white"
+                placeholder="e.g., Grand Plaza Hotel"
+              >
+            </div>
+
+            <!-- Room Types Section (Only for receptionist) -->
+            <div id="roomTypesSection">
+              <div class="flex items-center justify-between mb-2">
+                <label class="block text-sm font-medium text-gray-700">
+                  Room Types & Counts
+                </label>
+                <button type="button" onclick="addRoomType()" class="text-xs text-[#008080] hover:text-teal-700 font-medium flex items-center gap-1">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                  </svg>
+                  Add Room Type
+                </button>
+              </div>
+              <div id="roomTypesContainer" class="space-y-3">
+                <!-- Default room type row -->
+                <div class="flex items-center gap-2 room-type-row">
+                  <input 
+                    type="text" 
+                    name="roomTypes[0][name]" 
+                    placeholder="e.g., Standard"
+                    class="flex-1 px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#008080] focus:border-transparent bg-white room-type-name"
+                  >
+                  <input 
+                    type="number" 
+                    name="roomTypes[0][count]" 
+                    min="1" 
+                    max="100"
+                    value="1"
+                    class="w-20 px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#008080] focus:border-transparent bg-white room-type-count"
+                    placeholder="0"
+                  >
+                  <span class="text-xs text-gray-500 w-12">rooms</span>
+                  <button type="button" onclick="removeRoomType(this)" class="p-1 text-gray-400 hover:text-red-500 transition" title="Remove">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+              <p class="mt-2 text-xs text-gray-500">Rooms will be auto-numbered (e.g., 101, 102, 201, 202...)</p>
+            </div>
+          </div>
+          {{/if}}
 
           <!-- Password -->
           <div>
@@ -146,6 +227,122 @@
       </div>
     </div>
   </div>
+
+  <script>
+    let roomTypeIndex = 1; // Start at 1 since we have one default row
+    
+    function toggleHotelConfig() {
+      const role = document.getElementById('role').value;
+      const hotelSection = document.getElementById('hotelConfigSection');
+      const roomTypesSection = document.getElementById('roomTypesSection');
+      const hotelNameInput = document.getElementById('hotelName');
+      const housekeeperWarning = document.getElementById('housekeeperWarning');
+      const submitButton = document.querySelector('button[type="submit"]');
+      
+      // Show/hide housekeeper warning when hotel not configured
+      if (housekeeperWarning) {
+        if (role === 'housekeeper') {
+          housekeeperWarning.classList.remove('hidden');
+          submitButton.disabled = true;
+          submitButton.classList.add('opacity-50', 'cursor-not-allowed');
+        } else {
+          housekeeperWarning.classList.add('hidden');
+          submitButton.disabled = false;
+          submitButton.classList.remove('opacity-50', 'cursor-not-allowed');
+        }
+      }
+      
+      if (hotelSection) {
+        // Only show hotel config section for receptionist
+        if (role === 'receptionist') {
+          hotelSection.classList.remove('hidden');
+          // Make hotel name required
+          if (hotelNameInput) hotelNameInput.required = true;
+          // Make room type inputs required
+          if (roomTypesSection) {
+            roomTypesSection.querySelectorAll('.room-type-name, .room-type-count').forEach(input => {
+              input.required = true;
+            });
+          }
+        } else {
+          hotelSection.classList.add('hidden');
+          // Make hotel name not required
+          if (hotelNameInput) hotelNameInput.required = false;
+          // Make room type inputs not required
+          if (roomTypesSection) {
+            roomTypesSection.querySelectorAll('.room-type-name, .room-type-count').forEach(input => {
+              input.required = false;
+            });
+          }
+        }
+      }
+    }
+    
+    function addRoomType() {
+      const container = document.getElementById('roomTypesContainer');
+      const newRow = document.createElement('div');
+      newRow.className = 'flex items-center gap-2 room-type-row';
+      newRow.innerHTML = `
+        <input 
+          type="text" 
+          name="roomTypes[${roomTypeIndex}][name]" 
+          placeholder="e.g., Deluxe, Suite, Family"
+          required
+          class="flex-1 px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#008080] focus:border-transparent bg-white"
+        >
+        <input 
+          type="number" 
+          name="roomTypes[${roomTypeIndex}][count]" 
+          min="1" 
+          max="100"
+          value="1"
+          required
+          class="w-20 px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#008080] focus:border-transparent bg-white"
+          placeholder="0"
+        >
+        <span class="text-xs text-gray-500 w-12">rooms</span>
+        <button type="button" onclick="removeRoomType(this)" class="p-1 text-gray-400 hover:text-red-500 transition" title="Remove">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+          </svg>
+        </button>
+      `;
+      container.appendChild(newRow);
+      roomTypeIndex++;
+      
+      // Focus the new input
+      newRow.querySelector('input[type="text"]').focus();
+    }
+    
+    function removeRoomType(button) {
+      const container = document.getElementById('roomTypesContainer');
+      const rows = container.querySelectorAll('.room-type-row');
+      
+      // Don't remove if it's the only row
+      if (rows.length <= 1) {
+        alert('You need at least one room type');
+        return;
+      }
+      
+      button.closest('.room-type-row').remove();
+      reindexRoomTypes();
+    }
+    
+    function reindexRoomTypes() {
+      const container = document.getElementById('roomTypesContainer');
+      const rows = container.querySelectorAll('.room-type-row');
+      
+      rows.forEach((row, index) => {
+        const nameInput = row.querySelector('input[type="text"]');
+        const countInput = row.querySelector('input[type="number"]');
+        
+        nameInput.name = `roomTypes[${index}][name]`;
+        countInput.name = `roomTypes[${index}][count]`;
+      });
+      
+      roomTypeIndex = rows.length;
+    }
+  </script>
 
 </body>
 </html>

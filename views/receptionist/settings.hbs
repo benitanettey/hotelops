@@ -1,0 +1,526 @@
+<div class="min-h-screen bg-gray-100">
+
+  <!-- ================= UNIFIED HEADER ================= -->
+  <header class="bg-white shadow-sm sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+      <div class="flex items-center justify-between h-16">
+        <!-- Logo and Brand (Far Left) -->
+        <div class="flex items-center gap-3">
+          <div class="bg-[#008080] text-white p-2 rounded-lg">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4">
+              </path>
+            </svg>
+          </div>
+          <h1 class="text-xl font-bold text-gray-800">{{hotelName}}</h1>
+        </div>
+
+        <!-- Desktop Navigation Links (Center) - Hidden on mobile -->
+        <nav class="hidden md:flex flex-1 justify-center">
+          <ul class="flex items-center gap-6">
+            <li>
+              <a href="/receptionist/dashboard"
+                class="text-sm font-medium text-gray-600 hover:text-[#008080] transition">
+                Dashboard
+              </a>
+            </li>
+            <li>
+              <a href="/receptionist/checkingguests"
+                class="text-sm font-medium text-gray-600 hover:text-[#008080] transition">
+                Check-In
+              </a>
+            </li>
+            <li>
+              <a href="/receptionist/checkoutguests"
+                class="text-sm font-medium text-gray-600 hover:text-[#008080] transition">
+                Checkout
+              </a>
+            </li>
+            <li>
+              <a href="/receptionist/rooms" class="text-sm font-medium text-gray-600 hover:text-[#008080] transition">
+                Rooms
+              </a>
+            </li>
+            <li>
+              <a href="/receptionist/cleaning-requests"
+                class="text-sm font-medium text-gray-600 hover:text-[#008080] transition">
+                Cleaning Request
+              </a>
+            </li>
+            <li>
+              <a href="/receptionist/housekeepers"
+                class="text-sm font-medium text-gray-600 hover:text-[#008080] transition">
+                Housekeepers
+              </a>
+            </li>
+          </ul>
+        </nav>
+
+        <!-- Right Side Icons (Far Right) - Hidden on mobile -->
+        <div class="hidden md:flex items-center gap-4">
+          <!-- User Profile - Links to Settings -->
+          <a href="/receptionist/settings" class="w-8 h-8 bg-[#008080] rounded-full flex items-center justify-center text-white text-sm font-medium hover:bg-teal-700 transition" title="Settings">
+            {{userInitial}}
+          </a>
+        </div>
+
+        <!-- Mobile menu button -->
+        <button onclick="toggleMobileMenu()" class="md:hidden p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100">
+          <svg id="menu-icon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+          </svg>
+          <svg id="close-icon" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Navigation Menu (Hidden by default) -->
+    <div id="mobile-menu" class="hidden md:hidden border-t border-gray-200">
+      <div class="px-4 py-3 space-y-1">
+        <a href="/receptionist/dashboard" class="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50">
+          Dashboard
+        </a>
+        <a href="/receptionist/checkingguests" class="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50">
+          Check-In
+        </a>
+        <a href="/receptionist/checkoutguests" class="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50">
+          Checkout
+        </a>
+        <a href="/receptionist/rooms" class="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50">
+          Rooms
+        </a>
+        <a href="/receptionist/cleaning-requests" class="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50">
+          Cleaning Request
+        </a>
+        <a href="/receptionist/housekeepers" class="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50">
+          Housekeepers
+        </a>
+        <a href="/receptionist/settings" class="block px-3 py-2 rounded-md text-sm font-medium text-gray-900 bg-gray-50">
+          Settings
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= PAGE CONTENT ================= -->
+  <main class="max-w-4xl mx-auto px-6 py-10 space-y-8">
+
+    <!-- Page Header -->
+    <div class="flex items-center gap-3">
+      <div class="bg-[#008080] text-white p-3 rounded-lg">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+        </svg>
+      </div>
+      <div>
+        <h2 class="text-2xl font-bold text-gray-800">Settings</h2>
+        <p class="text-sm text-gray-500">Manage your account and hotel configuration</p>
+      </div>
+    </div>
+
+    {{#if success}}
+    <div class="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg">
+      <p class="text-sm">{{success}}</p>
+    </div>
+    {{/if}}
+
+    {{#if error}}
+    <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+      <p class="text-sm">{{error}}</p>
+    </div>
+    {{/if}}
+
+    <!-- ================= USER PROFILE SECTION ================= -->
+    <div class="bg-white rounded-xl shadow-sm p-6">
+      <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+        <svg class="w-5 h-5 text-[#008080]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+        </svg>
+        User Profile
+      </h3>
+      
+      <form method="POST" action="/receptionist/settings/profile" class="space-y-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+            <input 
+              type="text" 
+              id="name" 
+              name="name" 
+              value="{{userName}}"
+              required
+              class="w-full px-4 py-2.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#008080] focus:border-transparent"
+            >
+          </div>
+          <div>
+            <label for="username" class="block text-sm font-medium text-gray-700 mb-1">Username</label>
+            <input 
+              type="text" 
+              id="username" 
+              name="username" 
+              value="{{username}}"
+              disabled
+              class="w-full px-4 py-2.5 text-sm border border-gray-200 rounded-lg bg-gray-50 text-gray-500 cursor-not-allowed"
+            >
+            <p class="mt-1 text-xs text-gray-500">Username cannot be changed</p>
+          </div>
+        </div>
+        <div>
+          <button type="submit" class="bg-[#008080] text-white px-6 py-2 rounded-lg hover:bg-teal-700 transition text-sm font-medium">
+            Update Profile
+          </button>
+        </div>
+      </form>
+    </div>
+
+    {{#if isAdmin}}
+    <!-- ================= ADMIN SECTION HEADER ================= -->
+    <div class="bg-amber-50 border border-amber-200 rounded-lg p-4">
+      <div class="flex items-center gap-2">
+        <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+        </svg>
+        <span class="text-sm font-medium text-amber-800">Admin Controls</span>
+      </div>
+      <p class="text-xs text-amber-700 mt-1">These settings can only be modified by the admin receptionist.</p>
+    </div>
+
+    <!-- ================= HOTEL CONFIGURATION SECTION ================= -->
+    <div class="bg-white rounded-xl shadow-sm p-6">
+      <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+        <svg class="w-5 h-5 text-[#008080]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+        </svg>
+        Hotel Configuration
+      </h3>
+      
+      <form method="POST" action="/receptionist/settings/hotel" class="space-y-4">
+        <div>
+          <label for="hotelName" class="block text-sm font-medium text-gray-700 mb-1">Hotel Name</label>
+          <input 
+            type="text" 
+            id="hotelName" 
+            name="hotelName" 
+            value="{{hotelName}}"
+            required
+            class="w-full px-4 py-2.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#008080] focus:border-transparent"
+          >
+        </div>
+        
+        <!-- Current Room Configuration -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Current Room Configuration</label>
+          <div class="bg-gray-50 rounded-lg p-4">
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
+              {{#each roomTypeSummary}}
+              <div class="bg-white rounded-lg p-3 border border-gray-200">
+                <p class="text-2xl font-bold text-[#008080]">{{count}}</p>
+                <p class="text-xs text-gray-500">{{name}}</p>
+              </div>
+              {{/each}}
+              <div class="bg-white rounded-lg p-3 border border-teal-300">
+                <p class="text-2xl font-bold text-teal-700">{{totalRooms}}</p>
+                <p class="text-xs text-gray-500">Total</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <button type="submit" class="bg-[#008080] text-white px-6 py-2 rounded-lg hover:bg-teal-700 transition text-sm font-medium">
+            Update Hotel Name
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- ================= ADJUST EXISTING ROOMS SECTION ================= -->
+    <div class="bg-white rounded-xl shadow-sm p-6">
+      <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+        <svg class="w-5 h-5 text-[#008080]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+        </svg>
+        Adjust Existing Rooms
+      </h3>
+      <p class="text-sm text-gray-500 mb-4">Add or remove rooms from existing room types. Changes will update room numbering automatically.</p>
+      
+      <form method="POST" action="/receptionist/settings/adjust-rooms" class="space-y-4">
+        <div class="space-y-3">
+          {{#each roomTypeSummary}}
+          <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+            <span class="flex-1 text-sm font-medium text-gray-700">{{name}}</span>
+            <span class="text-xs text-gray-500">Current: {{count}}</span>
+            <div class="flex items-center gap-2">
+              <label class="text-xs text-gray-500">New count:</label>
+              <input 
+                type="number" 
+                name="roomTypes[{{@index}}][name]" 
+                value="{{name}}"
+                hidden
+              >
+              <input 
+                type="number" 
+                name="roomTypes[{{@index}}][count]" 
+                min="0" 
+                max="100"
+                value="{{count}}"
+                class="w-20 px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#008080] focus:border-transparent text-center"
+              >
+            </div>
+          </div>
+          {{else}}
+          <p class="text-sm text-gray-500 text-center py-4">No room types configured yet.</p>
+          {{/each}}
+        </div>
+        {{#if roomTypeSummary.length}}
+        <div class="flex items-center gap-3">
+          <button type="submit" class="bg-[#008080] text-white px-6 py-2 rounded-lg hover:bg-teal-700 transition text-sm font-medium">
+            Update Room Counts
+          </button>
+          <span class="text-xs text-gray-500">Note: Reducing count will remove rooms that are not occupied</span>
+        </div>
+        {{/if}}
+      </form>
+    </div>
+
+    <!-- ================= ADD ROOMS SECTION ================= -->
+    <div class="bg-white rounded-xl shadow-sm p-6">
+      <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+        <svg class="w-5 h-5 text-[#008080]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+        </svg>
+        Add New Rooms
+      </h3>
+      <p class="text-sm text-gray-500 mb-4">Expand your hotel by adding more rooms. New rooms will be automatically numbered.</p>
+      
+      <form method="POST" action="/receptionist/settings/add-rooms" class="space-y-4">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-sm text-gray-600">Room types to add:</span>
+          <button type="button" onclick="addNewRoomType()" class="text-xs text-[#008080] hover:text-teal-700 font-medium flex items-center gap-1">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+            </svg>
+            Add Type
+          </button>
+        </div>
+        <div id="newRoomTypesContainer" class="space-y-3">
+          <!-- Default room type row -->
+          <div class="flex items-center gap-2 new-room-type-row">
+            <input 
+              type="text" 
+              name="roomTypes[0][name]" 
+              placeholder="Room type name"
+              required
+              class="flex-1 px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#008080] focus:border-transparent"
+            >
+            <input 
+              type="number" 
+              name="roomTypes[0][count]" 
+              min="1" 
+              max="50"
+              value="1"
+              required
+              class="w-20 px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#008080] focus:border-transparent"
+            >
+            <span class="text-xs text-gray-500 w-12">rooms</span>
+            <button type="button" onclick="removeNewRoomType(this)" class="p-1 text-gray-400 hover:text-red-500 transition" title="Remove">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+        <div>
+          <button type="submit" class="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition text-sm font-medium">
+            Add Rooms
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- ================= ROOM PRICING SECTION ================= -->
+    <div class="bg-white rounded-xl shadow-sm p-6">
+      <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+        <svg class="w-5 h-5 text-[#008080]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+        Room Pricing
+      </h3>
+      <p class="text-sm text-gray-500 mb-4">Set nightly rates for each room type. This will update all rooms of that type.</p>
+      
+      <form method="POST" action="/receptionist/settings/pricing" class="space-y-4">
+        <div class="space-y-3">
+          {{#each roomTypeSummary}}
+          <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+            <span class="flex-1 text-sm font-medium text-gray-700 capitalize">{{name}}</span>
+            <span class="text-xs text-gray-500">{{count}} room(s)</span>
+            <div class="flex items-center gap-1">
+              <span class="text-gray-400">$</span>
+              <input 
+                type="number" 
+                name="pricing[{{@index}}][name]" 
+                value="{{name}}"
+                hidden
+              >
+              <input 
+                type="number" 
+                name="pricing[{{@index}}][price]" 
+                min="1" 
+                max="10000"
+                step="1"
+                value="{{price}}"
+                class="w-24 px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#008080] focus:border-transparent text-right"
+              >
+              <span class="text-xs text-gray-500">/night</span>
+            </div>
+          </div>
+          {{else}}
+          <p class="text-sm text-gray-500 text-center py-4">No room types configured yet.</p>
+          {{/each}}
+        </div>
+        {{#if roomTypeSummary.length}}
+        <div>
+          <button type="submit" class="bg-[#008080] text-white px-6 py-2 rounded-lg hover:bg-teal-700 transition text-sm font-medium">
+            Update Pricing
+          </button>
+        </div>
+        {{/if}}
+      </form>
+    </div>
+    {{else}}
+    <!-- ================= NON-ADMIN NOTICE ================= -->
+    <div class="bg-gray-50 border border-gray-200 rounded-lg p-6 text-center">
+      <svg class="w-12 h-12 text-gray-400 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+      </svg>
+      <h3 class="text-lg font-semibold text-gray-700 mb-2">Admin Access Required</h3>
+      <p class="text-sm text-gray-500 mb-4">Hotel configuration, room management, and pricing settings are only available to the admin receptionist.</p>
+      <p class="text-xs text-gray-400">Contact your administrator if you need to make changes to these settings.</p>
+    </div>
+    {{/if}}
+
+    <!-- ================= RECOVERY CODES SECTION ================= -->
+    <div class="bg-white rounded-xl shadow-sm p-6">
+      <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+        <svg class="w-5 h-5 text-[#008080]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path>
+        </svg>
+        Recovery Codes
+      </h3>
+      
+      <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg mb-4">
+        <div>
+          <p class="text-sm text-gray-700">Recovery codes remaining: <span class="font-semibold text-[#008080]">{{remainingCodes}}</span> / 5</p>
+          <p class="text-xs text-gray-500 mt-1">Used for password recovery when you can't access your account</p>
+        </div>
+        {{#if (lte remainingCodes 2)}}
+        <span class="px-3 py-1 bg-orange-100 text-orange-700 rounded-full text-xs font-medium">Low</span>
+        {{/if}}
+      </div>
+
+      {{#if (eq remainingCodes 0)}}
+      <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4">
+        <p class="text-sm font-medium">All recovery codes have been used!</p>
+        <p class="text-xs mt-1">Generate new codes to ensure account recovery access.</p>
+      </div>
+      {{/if}}
+      
+      <form method="POST" action="/receptionist/settings/regenerate-codes" onsubmit="return confirm('This will invalidate all existing recovery codes. Are you sure?');">
+        <button type="submit" class="bg-orange-500 text-white px-6 py-2 rounded-lg hover:bg-orange-600 transition text-sm font-medium">
+          Generate New Recovery Codes
+        </button>
+      </form>
+    </div>
+
+    <!-- ================= LOGOUT SECTION ================= -->
+    <div class="bg-white rounded-xl shadow-sm p-6 border-l-4 border-red-500">
+      <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+        <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+        </svg>
+        Sign Out
+      </h3>
+      <p class="text-sm text-gray-500 mb-4">Sign out of your account on this device.</p>
+      
+      <a href="/logout" class="inline-block bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition text-sm font-medium">
+        Logout
+      </a>
+    </div>
+
+  </main>
+
+</div>
+
+<!-- Mobile Menu Script -->
+<script>
+  function toggleMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const menuIcon = document.getElementById('menu-icon');
+    const closeIcon = document.getElementById('close-icon');
+    
+    menu.classList.toggle('hidden');
+    menuIcon.classList.toggle('hidden');
+    closeIcon.classList.toggle('hidden');
+  }
+
+  // Add New Rooms - Room Type Management
+  function addNewRoomType() {
+    const container = document.getElementById('newRoomTypesContainer');
+    const rows = container.querySelectorAll('.new-room-type-row');
+    const index = rows.length;
+    
+    const newRow = document.createElement('div');
+    newRow.className = 'flex items-center gap-2 new-room-type-row';
+    newRow.innerHTML = `
+      <input 
+        type="text" 
+        name="roomTypes[${index}][name]" 
+        placeholder="Room type name"
+        required
+        class="flex-1 px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#008080] focus:border-transparent"
+      >
+      <input 
+        type="number" 
+        name="roomTypes[${index}][count]" 
+        min="1" 
+        max="50"
+        value="1"
+        required
+        class="w-20 px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#008080] focus:border-transparent"
+      >
+      <span class="text-xs text-gray-500 w-12">rooms</span>
+      <button type="button" onclick="removeNewRoomType(this)" class="p-1 text-gray-400 hover:text-red-500 transition" title="Remove">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+    `;
+    container.appendChild(newRow);
+  }
+
+  function removeNewRoomType(button) {
+    const container = document.getElementById('newRoomTypesContainer');
+    const rows = container.querySelectorAll('.new-room-type-row');
+    
+    if (rows.length > 1) {
+      button.closest('.new-room-type-row').remove();
+      reindexNewRoomTypes();
+    }
+  }
+
+  function reindexNewRoomTypes() {
+    const container = document.getElementById('newRoomTypesContainer');
+    const rows = container.querySelectorAll('.new-room-type-row');
+    
+    rows.forEach((row, index) => {
+      const nameInput = row.querySelector('input[type="text"]');
+      const countInput = row.querySelector('input[type="number"]');
+      nameInput.name = `roomTypes[${index}][name]`;
+      countInput.name = `roomTypes[${index}][count]`;
+    });
+  }
+</script>

@@ -1,0 +1,252 @@
+[
+  {
+    "id": "activity-77b5cdf5-5a75-4616-add6-4693b6788a47",
+    "type": "check-in",
+    "description": "Guest Check-In",
+    "details": "Room 102 • Kelvin Musila (1 adult, 1 child)",
+    "userId": "user-55758027-0a28-4ff6-bc54-1a47130dac77",
+    "userName": "sebo seba",
+    "hotelId": "hotel-d7fcba66-0abc-4478-8c70-add22469a17c",
+    "createdAt": "2026-02-17T11:50:33.162Z"
+  },
+  {
+    "id": "activity-7197865a-2bb8-4bf7-8cce-bcc4ee607513",
+    "type": "status-change",
+    "description": "Housekeeper Online",
+    "details": "vo is now active",
+    "userId": "user-607f3574-14f1-4ad1-aa07-c2b8b07bdbdc",
+    "userName": "vo",
+    "hotelId": "hotel-d7fcba66-0abc-4478-8c70-add22469a17c",
+    "createdAt": "2026-02-17T11:49:48.277Z"
+  },
+  {
+    "id": "activity-ce1b4b55-fefc-4362-85f0-e4ed83027bd2",
+    "type": "cleaning-assigned",
+    "description": "Cleaning Assigned",
+    "details": "Room 106 • netey",
+    "userId": "user-55758027-0a28-4ff6-bc54-1a47130dac77",
+    "userName": "sebo seba",
+    "hotelId": "hotel-d7fcba66-0abc-4478-8c70-add22469a17c",
+    "createdAt": "2026-02-17T11:49:03.181Z"
+  },
+  {
+    "id": "activity-a030f801-90fe-41b3-98f4-a70abc1a7b96",
+    "type": "check-out",
+    "description": "Guest Check-Out",
+    "details": "Room 106 • Kelvin Musila",
+    "userId": "user-55758027-0a28-4ff6-bc54-1a47130dac77",
+    "userName": "sebo seba",
+    "hotelId": "hotel-d7fcba66-0abc-4478-8c70-add22469a17c",
+    "createdAt": "2026-02-17T11:49:03.132Z"
+  },
+  {
+    "id": "activity-93488778-f6b5-4087-8aba-7e77bcbfc1b9",
+    "type": "check-in",
+    "description": "Guest Check-In",
+    "details": "Room 106 • Kelvin Musila (3 adults)",
+    "userId": "user-55758027-0a28-4ff6-bc54-1a47130dac77",
+    "userName": "sebo seba",
+    "hotelId": "hotel-d7fcba66-0abc-4478-8c70-add22469a17c",
+    "createdAt": "2026-02-17T11:39:35.755Z"
+  },
+  {
+    "id": "activity-d9901c95-8416-413a-bdfc-e94423af613f",
+    "type": "cleaning-assigned",
+    "description": "Cleaning Assigned",
+    "details": "Room 101 • mmm",
+    "userId": "user-55758027-0a28-4ff6-bc54-1a47130dac77",
+    "userName": "sebo seba",
+    "hotelId": "hotel-d7fcba66-0abc-4478-8c70-add22469a17c",
+    "createdAt": "2026-02-17T11:39:02.035Z"
+  },
+  {
+    "id": "activity-fade5e2e-37c5-4902-ae67-ea112a498794",
+    "type": "check-out",
+    "description": "Guest Check-Out",
+    "details": "Room 101 • Kelvin Musila",
+    "userId": "user-55758027-0a28-4ff6-bc54-1a47130dac77",
+    "userName": "sebo seba",
+    "hotelId": "hotel-d7fcba66-0abc-4478-8c70-add22469a17c",
+    "createdAt": "2026-02-17T11:39:02.032Z"
+  },
+  {
+    "id": "activity-fc6706a2-0cae-4b19-bd2c-3897e194ba9c",
+    "type": "check-in",
+    "description": "Guest Check-In",
+    "details": "Room 101 • Kelvin Musila (2 adults)",
+    "userId": "user-55758027-0a28-4ff6-bc54-1a47130dac77",
+    "userName": "sebo seba",
+    "hotelId": "hotel-d7fcba66-0abc-4478-8c70-add22469a17c",
+    "createdAt": "2026-02-17T11:38:23.107Z"
+  },
+  {
+    "id": "activity-40801aff-cc05-4e76-910a-ab4856a1b7d2",
+    "type": "cleaning-started",
+    "description": "Cleaning Started",
+    "details": "208 • mmm",
+    "userId": "user-f9a93e62-5882-44b1-8d1a-277a44763328",
+    "userName": "mmm",
+    "hotelId": "hotel-d7fcba66-0abc-4478-8c70-add22469a17c",
+    "createdAt": "2026-02-17T11:36:31.400Z"
+  },
+  {
+    "id": "activity-d7674472-9b42-45d4-aeb9-7d4a8f7e906f",
+    "type": "cleaning-complete",
+    "description": "Cleaning Completed",
+    "details": "101 • mmm",
+    "userId": "user-f9a93e62-5882-44b1-8d1a-277a44763328",
+    "userName": "mmm",
+    "hotelId": "hotel-d7fcba66-0abc-4478-8c70-add22469a17c",
+    "createdAt": "2026-02-17T11:31:24.497Z"
+  },
+  {
+    "id": "activity-b55bbd57-c0f9-4fb6-834d-dc7c98571d07",
+    "type": "cleaning-started",
+    "description": "Cleaning Started",
+    "details": "101 • mmm",
+    "userId": "user-f9a93e62-5882-44b1-8d1a-277a44763328",
+    "userName": "mmm",
+    "hotelId": "hotel-d7fcba66-0abc-4478-8c70-add22469a17c",
+    "createdAt": "2026-02-17T11:31:18.485Z"
+  },
+  {
+    "id": "activity-a0a7b00a-5b56-4210-96db-8c131a30bc87",
+    "type": "cleaning-complete",
+    "description": "Cleaning Completed",
+    "details": "103 • netey",
+    "userId": "user-639ada24-9866-4939-89c6-c85b8d2bd83b",
+    "userName": "netey",
+    "hotelId": "hotel-d7fcba66-0abc-4478-8c70-add22469a17c",
+    "createdAt": "2026-02-17T11:27:42.896Z"
+  },
+  {
+    "id": "activity-d2812c15-8fa2-48cf-9fbe-db9c616b274d",
+    "type": "cleaning-started",
+    "description": "Cleaning Started",
+    "details": "103 • netey",
+    "userId": "user-639ada24-9866-4939-89c6-c85b8d2bd83b",
+    "userName": "netey",
+    "hotelId": "hotel-d7fcba66-0abc-4478-8c70-add22469a17c",
+    "createdAt": "2026-02-17T11:27:36.019Z"
+  },
+  {
+    "id": "activity-3fa13aa5-62d8-46a7-944a-b04eeb9e9905",
+    "type": "cleaning-assigned",
+    "description": "Cleaning Request Created",
+    "details": "wainana • Assigned to netey",
+    "userId": "user-55758027-0a28-4ff6-bc54-1a47130dac77",
+    "userName": "sebo seba",
+    "hotelId": "hotel-d7fcba66-0abc-4478-8c70-add22469a17c",
+    "createdAt": "2026-02-17T11:26:56.387Z"
+  },
+  {
+    "id": "activity-6c3470fc-6a37-4095-b2ef-04a54e510559",
+    "type": "cleaning-assigned",
+    "description": "Cleaning Assigned",
+    "details": "Room 208 • mmm",
+    "userId": "user-55758027-0a28-4ff6-bc54-1a47130dac77",
+    "userName": "sebo seba",
+    "hotelId": "hotel-d7fcba66-0abc-4478-8c70-add22469a17c",
+    "createdAt": "2026-02-17T11:26:36.310Z"
+  },
+  {
+    "id": "activity-c1fc9f1e-0c84-4070-9c7c-c30d4e440ff4",
+    "type": "check-out",
+    "description": "Guest Check-Out",
+    "details": "Room 208 • Kelvin Musila",
+    "userId": "user-55758027-0a28-4ff6-bc54-1a47130dac77",
+    "userName": "sebo seba",
+    "hotelId": "hotel-d7fcba66-0abc-4478-8c70-add22469a17c",
+    "createdAt": "2026-02-17T11:26:36.306Z"
+  },
+  {
+    "id": "activity-2e03a8b7-240b-4231-b46f-ccb5c71cd517",
+    "type": "cleaning-assigned",
+    "description": "Cleaning Assigned",
+    "details": "Room 103 • netey",
+    "userId": "user-55758027-0a28-4ff6-bc54-1a47130dac77",
+    "userName": "sebo seba",
+    "hotelId": "hotel-d7fcba66-0abc-4478-8c70-add22469a17c",
+    "createdAt": "2026-02-17T11:26:32.398Z"
+  },
+  {
+    "id": "activity-de9fd451-3da1-4d74-acce-2c87466ba9e6",
+    "type": "check-out",
+    "description": "Guest Check-Out",
+    "details": "Room 103 • Kelvin Musila",
+    "userId": "user-55758027-0a28-4ff6-bc54-1a47130dac77",
+    "userName": "sebo seba",
+    "hotelId": "hotel-d7fcba66-0abc-4478-8c70-add22469a17c",
+    "createdAt": "2026-02-17T11:26:32.396Z"
+  },
+  {
+    "id": "activity-bbbd1003-d7ab-44ab-9d6c-843c5f74099b",
+    "type": "cleaning-assigned",
+    "description": "Cleaning Assigned",
+    "details": "Room 101 • mmm",
+    "userId": "user-55758027-0a28-4ff6-bc54-1a47130dac77",
+    "userName": "sebo seba",
+    "hotelId": "hotel-d7fcba66-0abc-4478-8c70-add22469a17c",
+    "createdAt": "2026-02-17T11:26:30.162Z"
+  },
+  {
+    "id": "activity-5f13c964-956b-4e57-8dd8-a475d15da22d",
+    "type": "check-out",
+    "description": "Guest Check-Out",
+    "details": "Room 101 • Kelvin Musila",
+    "userId": "user-55758027-0a28-4ff6-bc54-1a47130dac77",
+    "userName": "sebo seba",
+    "hotelId": "hotel-d7fcba66-0abc-4478-8c70-add22469a17c",
+    "createdAt": "2026-02-17T11:26:30.159Z"
+  },
+  {
+    "id": "activity-76a9adaf-0489-4d19-9e52-f6d9035f7cee",
+    "type": "check-in",
+    "description": "Guest Check-In",
+    "details": "Room 208 • Kelvin Musila (1 adult)",
+    "userId": "user-55758027-0a28-4ff6-bc54-1a47130dac77",
+    "userName": "sebo seba",
+    "hotelId": "hotel-d7fcba66-0abc-4478-8c70-add22469a17c",
+    "createdAt": "2026-02-17T11:26:17.747Z"
+  },
+  {
+    "id": "activity-19a10a10-7e0c-45dc-aeb6-9464a2dfd1a9",
+    "type": "check-in",
+    "description": "Guest Check-In",
+    "details": "Room 103 • Kelvin Musila (1 adult)",
+    "userId": "user-55758027-0a28-4ff6-bc54-1a47130dac77",
+    "userName": "sebo seba",
+    "hotelId": "hotel-d7fcba66-0abc-4478-8c70-add22469a17c",
+    "createdAt": "2026-02-17T11:25:56.743Z"
+  },
+  {
+    "id": "activity-f7338f8b-93d3-4fa0-a7d2-f8ae3272c6de",
+    "type": "check-in",
+    "description": "Guest Check-In",
+    "details": "Room 101 • Kelvin Musila (1 adult)",
+    "userId": "user-55758027-0a28-4ff6-bc54-1a47130dac77",
+    "userName": "sebo seba",
+    "hotelId": "hotel-d7fcba66-0abc-4478-8c70-add22469a17c",
+    "createdAt": "2026-02-17T11:25:29.549Z"
+  },
+  {
+    "id": "activity-9fc4a275-f4a2-42ca-af77-820db190e3df",
+    "type": "status-change",
+    "description": "Housekeeper Online",
+    "details": "netey is now active",
+    "userId": "user-639ada24-9866-4939-89c6-c85b8d2bd83b",
+    "userName": "netey",
+    "hotelId": "hotel-d7fcba66-0abc-4478-8c70-add22469a17c",
+    "createdAt": "2026-02-17T11:24:22.549Z"
+  },
+  {
+    "id": "activity-2c6a4918-c4fd-4d4a-89c1-ee6998996941",
+    "type": "status-change",
+    "description": "Housekeeper Online",
+    "details": "mmm is now active",
+    "userId": "user-f9a93e62-5882-44b1-8d1a-277a44763328",
+    "userName": "mmm",
+    "hotelId": "hotel-d7fcba66-0abc-4478-8c70-add22469a17c",
+    "createdAt": "2026-02-17T11:23:23.236Z"
+  }
+]

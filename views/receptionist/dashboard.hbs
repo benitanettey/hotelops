@@ -1,15 +1,3 @@
-<!-- 
-  RECEPTIONIST DASHBOARD PAGE
-  This page displays an overview of hotel operations including room statistics,
-  occupancy trends, recent activity, and property highlights.
-  
-  BACKEND TODO:
-  - Pass totalRooms, roomsReady, pendingCleaning, occupied counts from controller
-  - Pass occupancyData array for chart (monthly data with dates and values)
-  - Pass recentActivity array with activity items (type, description, timestamp)
-  - Pass propertyImages array for "Our Property" section
--->
-
 <div class="min-h-screen bg-gray-50">
   <!-- Sticky Header/Navigation -->
   <header class="bg-white shadow-sm sticky top-0 z-50">
@@ -24,7 +12,7 @@
               </path>
             </svg>
           </div>
-          <h1 class="text-xl font-bold text-gray-800">StaySync</h1>
+          <h1 class="text-xl font-bold text-gray-800">{{hotelName}}</h1>
         </div>
 
         <!-- Desktop Navigation Links (Center) - Hidden on mobile -->
@@ -70,10 +58,10 @@
 
         <!-- Right Side Icons (Far Right) - Hidden on mobile -->
         <div class="hidden md:flex items-center gap-4">
-          <!-- User Profile -->
-          <div class="w-8 h-8 bg-[#008080] rounded-full flex items-center justify-center text-white text-sm font-medium">
-            R
-          </div>
+          <!-- User Profile - Links to Settings -->
+          <a href="/receptionist/settings" class="w-8 h-8 bg-[#008080] rounded-full flex items-center justify-center text-white text-sm font-medium hover:bg-teal-700 transition" title="Settings">
+            {{userInitial}}
+          </a>
 
           <!-- Logout Button -->
           <button onclick="showLogoutModal()" class="flex items-center gap-2 text-gray-600 hover:text-red-600 transition" title="Logout">
@@ -173,6 +161,88 @@
       menuIcon.classList.toggle('hidden');
       closeIcon.classList.toggle('hidden');
     }
+
+    // Render occupancy chart
+    document.addEventListener('DOMContentLoaded', function() {
+      const occupancyData = {{{occupancyData}}};
+      const chartContainer = document.getElementById('occupancyChart');
+      const labelsContainer = document.getElementById('occupancyLabels');
+      
+      if (!chartContainer || !labelsContainer) return;
+      
+      // Clear existing content
+      chartContainer.innerHTML = '';
+      labelsContainer.innerHTML = '';
+      
+      // If no data, show placeholder
+      if (!occupancyData || occupancyData.length === 0) {
+        chartContainer.innerHTML = `
+          <div class="flex-1 flex flex-col items-center justify-center text-center py-8">
+            <svg class="w-12 h-12 text-gray-300 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+            </svg>
+            <p class="text-gray-400 text-sm">No occupancy data yet</p>
+            <p class="text-gray-300 text-xs mt-1">Check-in guests to see trends</p>
+          </div>`;
+        return;
+      }
+      
+      // Check if all values are 0
+      const allZero = occupancyData.every(d => d.occupancy === 0);
+      
+      if (allZero) {
+        // Show a nice empty chart with day labels
+        occupancyData.forEach((day) => {
+          const bar = document.createElement('div');
+          bar.className = 'flex-1 bg-gradient-to-t from-gray-200 to-gray-100 rounded-t-md relative';
+          bar.style.height = '8px';
+          bar.style.opacity = '0.6';
+          chartContainer.appendChild(bar);
+          
+          const label = document.createElement('span');
+          label.textContent = day.dayLabel;
+          label.className = 'text-gray-400';
+          labelsContainer.appendChild(label);
+        });
+        
+        // Add overlay message
+        const overlay = document.createElement('div');
+        overlay.className = 'absolute inset-0 flex items-center justify-center';
+        overlay.innerHTML = `
+          <div class="text-center bg-white/90 px-4 py-3 rounded-lg shadow-sm">
+            <p class="text-gray-500 text-sm font-medium">No guests this week</p>
+            <p class="text-gray-400 text-xs">Start checking in guests</p>
+          </div>`;
+        chartContainer.style.position = 'relative';
+        chartContainer.appendChild(overlay);
+        return;
+      }
+      
+      // Render bars with actual data
+      occupancyData.forEach((day, index) => {
+        // Calculate bar height as percentage of container (max 100%)
+        const heightPercent = (day.occupancy / 100) * 100;
+        
+        // Create bar
+        const bar = document.createElement('div');
+        bar.className = 'flex-1 bg-gradient-to-t from-teal-600 to-teal-400 rounded-t-md relative group cursor-pointer hover:from-teal-700 hover:to-teal-500 transition-all';
+        bar.style.height = `${Math.max(heightPercent, 4)}%`;
+        bar.style.minHeight = '4px';
+        
+        // Add tooltip
+        const tooltip = document.createElement('div');
+        tooltip.className = 'absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10';
+        tooltip.textContent = `${day.occupancy}%`;
+        bar.appendChild(tooltip);
+        
+        chartContainer.appendChild(bar);
+        
+        // Create label
+        const label = document.createElement('span');
+        label.textContent = day.dayLabel;
+        labelsContainer.appendChild(label);
+      });
+    });
   </script>
 
   <!-- Main Content -->
@@ -213,7 +283,6 @@
 
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <!-- Total Rooms -->
-        <!-- BACKEND TODO: Replace hardcoded value with {{totalRooms}} -->
         <div class="bg-white rounded-lg shadow-sm p-6 border-l-4 border-[#008080]">
           <div class="flex items-center gap-2 text-gray-600 text-sm mb-2">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -223,12 +292,11 @@
             </svg>
             Total Rooms
           </div>
-          <p class="text-3xl font-bold text-gray-800">50</p>
+          <p class="text-3xl font-bold text-gray-800">{{totalRooms}}</p>
           <p class="text-xs text-gray-500 mt-1">rooms</p>
         </div>
 
         <!-- Rooms Ready -->
-        <!-- BACKEND TODO: Replace hardcoded value with {{roomsReady}} -->
         <div class="bg-white rounded-lg shadow-sm p-6 border-l-4 border-green-500">
           <div class="flex items-center gap-2 text-gray-600 text-sm mb-2">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -237,12 +305,11 @@
             </svg>
             Rooms Ready
           </div>
-          <p class="text-3xl font-bold text-gray-800">35</p>
+          <p class="text-3xl font-bold text-gray-800">{{roomsReady}}</p>
           <p class="text-xs text-gray-500 mt-1">available</p>
         </div>
 
         <!-- Pending Cleaning -->
-        <!-- BACKEND TODO: Replace hardcoded value with {{pendingCleaning}} -->
         <div class="bg-white rounded-lg shadow-sm p-6 border-l-4 border-orange-500">
           <div class="flex items-center gap-2 text-gray-600 text-sm mb-2">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -251,12 +318,11 @@
             </svg>
             Pending Cleaning
           </div>
-          <p class="text-3xl font-bold text-gray-800">8</p>
+          <p class="text-3xl font-bold text-gray-800">{{pendingCleaning}}</p>
           <p class="text-xs text-gray-500 mt-1">rooms</p>
         </div>
 
         <!-- Occupied -->
-        <!-- BACKEND TODO: Replace hardcoded value with {{occupied}} -->
         <div class="bg-white rounded-lg shadow-sm p-6 border-l-4 border-blue-500">
           <div class="flex items-center gap-2 text-gray-600 text-sm mb-2">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -266,7 +332,7 @@
             </svg>
             Occupied
           </div>
-          <p class="text-3xl font-bold text-gray-800">7</p>
+          <p class="text-3xl font-bold text-gray-800">{{occupied}}</p>
           <p class="text-xs text-gray-500 mt-1">rooms</p>
         </div>
       </div>
@@ -285,38 +351,31 @@
         </div>
         <p class="text-sm text-gray-500 mb-6">Weekly room occupancy rates</p>
 
-        <!-- Chart Area -->
-        <!-- BACKEND TODO: Integrate actual chart library (Chart.js, etc.) with {{occupancyData}} -->
-        <div class="relative h-64 flex items-end justify-between gap-2 border-b border-l border-gray-200 px-4 pb-4">
+        <!-- Chart Area - Dynamic Bar Chart -->
+        <div class="relative h-64">
           <!-- Y-axis labels -->
-          <div class="absolute left-0 top-0 bottom-0 flex flex-col justify-between text-xs text-gray-500 pr-2">
-            <span>60</span>
-            <span>45</span>
-            <span>30</span>
-            <span>15</span>
+          <div class="absolute left-0 top-0 bottom-8 flex flex-col justify-between text-xs text-gray-500 w-8">
+            <span>100%</span>
+            <span>75%</span>
+            <span>50%</span>
+            <span>25%</span>
+            <span>0%</span>
           </div>
-
-          <!-- Chart visualization (placeholder) -->
-          <div class="flex-1 ml-8 h-full relative">
-            <!-- SVG gradient area chart placeholder -->
-            <svg class="w-full h-full" viewBox="0 0 700 200" preserveAspectRatio="none">
-              <defs>
-                <linearGradient id="chartGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                  <stop offset="0%" style="stop-color:#008080;stop-opacity:0.6" />
-                  <stop offset="100%" style="stop-color:#008080;stop-opacity:0.1" />
-                </linearGradient>
-              </defs>
-              <path d="M 0 120 L 100 100 L 200 80 L 300 90 L 400 60 L 500 50 L 600 70 L 700 40 L 700 200 L 0 200 Z"
-                fill="url(#chartGradient)" />
-              <path d="M 0 120 L 100 100 L 200 80 L 300 90 L 400 60 L 500 50 L 600 70 L 700 40" fill="none"
-                stroke="#008080" stroke-width="2" />
-            </svg>
+          
+          <!-- Chart bars container -->
+          <div id="occupancyChart" class="ml-10 h-52 flex items-end justify-around gap-2">
+            <!-- Bars will be generated by JavaScript -->
+          </div>
+          
+          <!-- X-axis labels -->
+          <div id="occupancyLabels" class="ml-10 flex justify-around text-xs text-gray-500 mt-2">
+            <!-- Labels will be generated by JavaScript -->
           </div>
         </div>
       </div>
 
       <!-- Recent Activity - Takes 1 column -->
-      <div class="bg-white rounded-lg shadow-sm p-6 lg:col-span-1">
+      <div class="bg-white rounded-lg shadow-sm p-6 lg:col-span-1 flex flex-col">
         <div class="flex items-center gap-2 mb-1">
           <svg class="w-5 h-5 text-[#008080]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -326,47 +385,24 @@
         </div>
         <p class="text-sm text-gray-500 mb-4">Latest system updates</p>
 
-        <!-- Activity List -->
-        <!-- BACKEND TODO: Loop through {{recentActivity}} array -->
-        <ul class="space-y-3">
-          <li class="flex items-start gap-3 pb-3 border-b border-gray-100">
+        <!-- Activity List - Fixed height matching chart (h-52 = 208px) with visible scroll -->
+        <ul class="activity-scroll space-y-3 h-52 overflow-y-auto pr-2 flex-shrink-0" style="scrollbar-width: thin; scrollbar-color: #9ca3af #f3f4f6;">
+          {{#each recentActivities}}
+          <li class="flex items-start gap-3 pb-3 {{#unless @last}}border-b border-gray-100{{/unless}}">
             <div class="bg-[#008080] text-white rounded-full p-1.5 mt-1 flex-shrink-0">
               <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
                 <circle cx="10" cy="10" r="8" />
               </svg>
             </div>
             <div class="flex-1 min-w-0">
-              <p class="text-sm font-medium text-gray-800">Guest Check-In</p>
-              <p class="text-xs text-gray-600 truncate">Room 302 • John Smith</p>
-              <p class="text-xs text-gray-400 mt-1">10 minutes ago</p>
+              <p class="text-sm font-medium text-gray-800">{{description}}</p>
+              <p class="text-xs text-gray-600 truncate">{{details}}</p>
+              <p class="text-xs text-gray-400 mt-1">{{time}}</p>
             </div>
           </li>
-
-          <li class="flex items-start gap-3 pb-3 border-b border-gray-100">
-            <div class="bg-[#008080] text-white rounded-full p-1.5 mt-1 flex-shrink-0">
-              <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                <circle cx="10" cy="10" r="8" />
-              </svg>
-            </div>
-            <div class="flex-1 min-w-0">
-              <p class="text-sm font-medium text-gray-800">Cleaning Complete</p>
-              <p class="text-xs text-gray-600 truncate">Room 205</p>
-              <p class="text-xs text-gray-400 mt-1">25 minutes ago</p>
-            </div>
-          </li>
-
-          <li class="flex items-start gap-3">
-            <div class="bg-[#008080] text-white rounded-full p-1.5 mt-1 flex-shrink-0">
-              <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                <circle cx="10" cy="10" r="8" />
-              </svg>
-            </div>
-            <div class="flex-1 min-w-0">
-              <p class="text-sm font-medium text-gray-800">Guest Check-Out</p>
-              <p class="text-xs text-gray-600 truncate">Room 101 • Jane Doe</p>
-              <p class="text-xs text-gray-400 mt-1">1 hour ago</p>
-            </div>
-          </li>
+          {{else}}
+          <li class="text-center py-4 text-gray-500 text-sm">No recent activity</li>
+          {{/each}}
         </ul>
       </div>
     </section>
@@ -375,7 +411,6 @@
     <section class="mb-6">
       <h3 class="text-lg font-semibold text-gray-800 mb-4">Our Property</h3>
 
-      <!-- BACKEND TODO: Loop through {{propertyImages}} array -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
         <!-- Property Card 1 -->
         <div class="bg-white rounded-lg shadow-sm overflow-hidden">
@@ -407,3 +442,21 @@
     </section>
   </main>
 </div>
+
+<style>
+  /* Webkit scrollbar styling for recent activity - more visible */
+  .activity-scroll::-webkit-scrollbar {
+    width: 8px;
+  }
+  .activity-scroll::-webkit-scrollbar-track {
+    background: #e5e7eb;
+    border-radius: 4px;
+  }
+  .activity-scroll::-webkit-scrollbar-thumb {
+    background: #9ca3af;
+    border-radius: 4px;
+  }
+  .activity-scroll::-webkit-scrollbar-thumb:hover {
+    background: #6b7280;
+  }
+</style>

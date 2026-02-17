@@ -1,23 +1,3 @@
-<!-- 
-  HOUSEKEEPING DASHBOARD
-
-  BACKEND TODO:
-  - Ensure only logged-in housekeepers can access this page
-  - Filter tasks by logged-in housekeeper ID
-  - Pass:
-      {
-        housekeeper: { name, isActive },
-        tasks: [],
-        stats: {
-          pending,
-          inProgress,
-          completed
-        }
-      }
-  - Handle POST /housekeeping/toggle-status
-  - Handle POST /housekeeping/start/:taskId
-  - Handle POST /housekeeping/complete/:taskId
--->
 
 <div class="min-h-screen bg-gray-100">
 
@@ -27,10 +7,19 @@
       <div class="flex justify-between items-center h-16 text-white">
 
         <!-- Logo -->
-        <div>
-          <h1 class="text-lg font-semibold">StaySync</h1>
-          <p class="text-xs opacity-80">Housekeeping Portal</p>
-        </div>
+        <a href="/housekeeping/dashboard" class="flex items-center gap-3">
+          <div class="bg-white/10 p-2 rounded-lg backdrop-blur-sm">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4">
+              </path>
+            </svg>
+          </div>
+          <div>
+            <h1 class="text-lg font-semibold">{{hotelName}}</h1>
+            <p class="text-xs opacity-80">Housekeeping Portal</p>
+          </div>
+        </a>
 
         <!-- Right Side: Toggle + Logout - Hidden on mobile -->
         <div class="hidden md:flex items-center gap-3">
@@ -52,6 +41,11 @@
 
             </button>
           </form>
+
+          <!-- Settings Link -->
+          <a href="/housekeeping/settings" class="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center text-white text-sm font-medium hover:bg-white/30 transition" title="Settings">
+            {{userInitial}}
+          </a>
 
           <!-- Logout Button -->
           <button onclick="showLogoutModal()" class="flex items-center gap-2 bg-white/10 hover:bg-white/20 px-4 py-1.5 rounded-full backdrop-blur-sm border border-white/20 transition group">
@@ -92,6 +86,14 @@
             </span>
           </button>
         </form>
+
+        <!-- Profile Link (Mobile) -->
+        <a href="/housekeeping/settings" class="w-full flex items-center gap-2 bg-white/10 px-4 py-2 rounded-lg text-sm font-medium text-white hover:bg-white/20 transition">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+          </svg>
+          <span>Profile</span>
+        </a>
         
         <!-- Logout (Mobile) -->
         <div class="border-t border-white/20 pt-2">
@@ -174,10 +176,11 @@
 
           <thead class="text-gray-500 border-b">
             <tr>
-              <th class="text-left py-3 font-medium">Room</th>
+              <th class="text-left py-3 font-medium">Location</th>
+              <th class="text-left py-3 font-medium">Priority</th>
               <th class="text-left py-3 font-medium">Status</th>
               <th class="text-left py-3 font-medium">Notes</th>
-              <th class="text-left py-3 font-medium">Assigned At</th>
+              <th class="text-left py-3 font-medium">Assigned</th>
               <th class="text-left py-3 font-medium">Actions</th>
             </tr>
           </thead>
@@ -188,34 +191,46 @@
             <tr class="hover:bg-gray-50 transition">
 
               <td class="py-4 font-medium text-gray-800">
-                {{roomNumber}}
+                {{#if isCustomLocation}}
+                  <span class="text-teal-600">{{location}}</span>
+                {{else}}
+                  Room {{roomNumber}}
+                {{/if}}
+              </td>
+
+              <td class="py-4">
+                {{#if (eq priority "High")}}
+                <span class="px-2.5 py-1 text-xs rounded-full bg-red-100 text-red-600 font-medium">High</span>
+                {{else}}
+                <span class="px-2.5 py-1 text-xs rounded-full bg-gray-100 text-gray-600">Low</span>
+                {{/if}}
               </td>
 
               <td class="py-4">
                 {{#if (eq status "pending")}}
                 <span class="px-3 py-1 text-xs rounded-full bg-yellow-100 text-yellow-700">
-                  pending
+                  Pending
                 </span>
                 {{/if}}
 
                 {{#if (eq status "in-progress")}}
                 <span class="px-3 py-1 text-xs rounded-full bg-blue-100 text-blue-700">
-                  in-progress
+                  In Progress
                 </span>
                 {{/if}}
 
                 {{#if (eq status "completed")}}
                 <span class="px-3 py-1 text-xs rounded-full bg-green-100 text-green-700">
-                  completed
+                  Completed
                 </span>
                 {{/if}}
               </td>
 
-              <td class="py-4 text-gray-600">
-                {{notes}}
+              <td class="py-4 text-gray-600 max-w-xs truncate">
+                {{#if notes}}{{notes}}{{else}}<span class="text-gray-400">—</span>{{/if}}
               </td>
 
-              <td class="py-4 text-gray-500">
+              <td class="py-4 text-gray-500 text-sm">
                 {{assignedAt}}
               </td>
 
@@ -244,7 +259,7 @@
 
             {{#unless tasks.length}}
             <tr>
-              <td colspan="5" class="py-12 text-center text-gray-400">
+              <td colspan="6" class="py-12 text-center text-gray-400">
                 No tasks assigned today
               </td>
             </tr>

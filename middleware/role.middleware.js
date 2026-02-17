@@ -44,8 +44,9 @@ function requireHousekeeper(req, res, next) {
 }
 
 /**
- * Require user to have admin role
- * Redirects to appropriate dashboard if wrong role
+ * Require user to have admin privileges
+ * Note: Admin is a receptionist with isAdmin=true, not a separate role
+ * Redirects to appropriate dashboard if not admin
  */
 function requireAdmin(req, res, next) {
   // First check if authenticated
@@ -53,17 +54,33 @@ function requireAdmin(req, res, next) {
     return res.redirect('/login');
   }
   
-  // Check if user is admin
-  if (req.session.role === 'admin') {
+  // Check if user is admin (has isAdmin flag)
+  if (req.session.isAdmin === true) {
     return next();
   }
   
-  // Wrong role - redirect to their appropriate dashboard
-  res.redirect(getDashboardPath(req.session.role));
+  // Not admin - redirect with error message in query param
+  // For AJAX/API calls, return JSON error
+  if (req.xhr || req.headers.accept?.includes('application/json')) {
+    return res.status(403).json({ error: 'Only admin receptionist can perform this action' });
+  }
+  
+  // For page requests, redirect to dashboard with error
+  res.redirect(getDashboardPath(req.session.role) + '?error=admin_required');
+}
+
+/**
+ * Check admin for specific actions but allow page access
+ * Use this to show pages but disable certain features for non-admins
+ */
+function checkAdmin(req, res, next) {
+  req.isAdmin = req.session && req.session.isAdmin === true;
+  next();
 }
 
 module.exports = {
   requireReceptionist,
   requireHousekeeper,
-  requireAdmin
+  requireAdmin,
+  checkAdmin
 };

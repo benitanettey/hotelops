@@ -1,49 +1,107 @@
 const express = require('express');
 const router = express.Router();
+const path = require('path');
+const { readJSON } = require('../utils/jsonHelper');
+
+// Data file paths
+const HOTEL_FILE = path.join(__dirname, '../data/hotel.json');
+const USER_FILE = path.join(__dirname, '../data/user.json');
+const CLEANING_TASKS_FILE = path.join(__dirname, '../data/cleaningTasks.json');
 
 // Housekeepers page (GET)
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
+  try {
+    const hotel = await readJSON(HOTEL_FILE);
+    const users = await readJSON(USER_FILE) || [];
+    const cleaningTasks = await readJSON(CLEANING_TASKS_FILE) || [];
 
-  // BACKEND TODO:
-  // 1. Read housekeepers from housekeepers.json
-  // 2. Read cleaningTasks.json to calculate completed tasks
-  // 3. Compute stats dynamically:
-  //    - totalStaff
-  //    - activeShift (onShift === true)
-  //    - tasksCompleted (status === 'Completed')
-  //    - overloaded (workload > 80)
-  // 4. Fetch latest completed cleanings
-  // 5. Sort recentCleanups by latest first
+    // Get only users with role "housekeeper"
+    const housekeeperUsers = users.filter(u => u.role === 'housekeeper');
 
-  const housekeepers = [
-    { name: "Maria Gonzalez", location: "Floor 3 & 4", workload: 85, onShift: true },
-    { name: "John Smith", location: "Ground Floor", workload: 50, onShift: true },
-    { name: "Sarah Connor", location: "Pool & Spa", workload: 15, onShift: false }
-  ];
+    // Calculate task counts for each housekeeper
+    const housekeepers = housekeeperUsers.map(h => {
+      const assignedTasks = cleaningTasks.filter(t => 
+        t.assignedTo === h.id && t.status !== 'Completed'
+      );
+      const completedToday = cleaningTasks.filter(t => {
+        const today = new Date().toISOString().split('T')[0];
+        return t.assignedTo === h.id && 
+               t.status === 'Completed' && 
+               (t.completedAt?.startsWith(today));
+      }).length;
+      
+      // Total tasks ever completed by this housekeeper
+      const totalCompleted = cleaningTasks.filter(t => 
+        t.assignedTo === h.id && t.status === 'Completed'
+      ).length;
+      
+      // Format join date
+      const joinDate = h.createdAt ? new Date(h.createdAt).toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric'
+      }) : 'Unknown';
+      
+      return {
+        id: h.id,
+        name: h.name,
+        username: h.username,
+        isActive: h.isActive || false,
+        taskCount: assignedTasks.length,
+        completedToday,
+        totalCompleted,
+        joinDate,
+        currentTask: assignedTasks.find(t => t.status === 'In Progress')?.roomNumber || 
+                     assignedTasks.find(t => t.status === 'In Progress')?.location || 
+                     null
+      };
+    });
 
-  const recentCleanups = [
-    { room: "402 Executive Suite", housekeeper: "Maria Gonzalez", type: "Standard", time: "10:45 AM (Today)" },
-    { room: "105 Deluxe Twin", housekeeper: "John Smith", type: "Deep Clean", time: "09:12 AM (Today)" }
-  ];
+    // Calculate stats
+    const totalStaff = housekeepers.length;
+    const activeToday = housekeepers.filter(h => h.isActive).length;
+    const today = new Date().toISOString().split('T')[0];
+    const tasksCompletedToday = cleaningTasks.filter(t => 
+      t.status === 'Completed' && t.completedAt?.startsWith(today)
+    ).length;
 
-  const totalStaff = housekeepers.length;
-  const activeShift = housekeepers.filter(h => h.onShift).length;
-  const overloaded = housekeepers.filter(h => h.workload > 80).length;
-  const tasksCompleted = 45;
+    // Get recent completed cleanings
+    const recentCleanups = cleaningTasks
+      .filter(t => t.status === 'Completed')
+      .sort((a, b) => new Date(b.completedAt || b.createdAt) - new Date(a.completedAt || a.createdAt))
+      .slice(0, 5)
+      .map(t => ({
+        room: t.roomNumber || t.location,
+        housekeeper: t.assignedToName || 'Unknown',
+        type: t.serviceType,
+        time: t.completedAt ? new Date(t.completedAt).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) : 'Recently'
+      }));
 
-  res.render('receptionist/housekeepers', {
-    layout: 'layouts/main',
-    title: 'Housekeepers',
-    stats: {
-      totalStaff,
-      activeShift,
-      tasksCompleted,
-      overloaded
-    },
-    housekeepers,
-    recentCleanups
-  });
-
+    res.render('receptionist/housekeepers', {
+      layout: 'layouts/main',
+      title: 'Housekeepers',
+      hotelName: hotel?.name || 'StaySync',
+      userInitial: (req.session.name || 'R').charAt(0).toUpperCase(),
+      stats: {
+        totalStaff,
+        activeToday,
+        tasksCompletedToday
+      },
+      housekeepers,
+      recentCleanups
+    });
+  } catch (error) {
+    console.error('Error loading housekeepers:', error);
+    res.render('receptionist/housekeepers', {
+      layout: 'layouts/main',
+      title: 'Housekeepers',
+      hotelName: 'StaySync',
+      userInitial: 'R',
+      stats: { totalStaff: 0, activeToday: 0, tasksCompletedToday: 0 },
+      housekeepers: [],
+      recentCleanups: []
+    });
+  }
 });
 
 module.exports = router;
