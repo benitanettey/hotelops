@@ -1,173 +1,35 @@
 [
   {
-    "id": "user-55758027-0a28-4ff6-bc54-1a47130dac77",
-    "username": "sebastian",
-    "password": "$2b$10$RgpDlsB.mwMNwsGwCfu.kOD4xnBg3HQ8f38r.ofvjSZ2q2.E4B9si",
+    "id": "user-3d008eac-c62f-4377-b544-a1fef73f0143",
+    "username": "steve",
+    "password": "$2b$10$w010g0UUTHI8w3cn6VvGOeHF.8qmx6f4R9W1TZZK4.xTqNToKMhBe",
     "role": "receptionist",
-    "name": "sebo seba",
+    "name": "vo",
     "isAdmin": true,
     "recoveryCodes": [
       {
-        "hashedCode": "$2b$10$p6BrFeqjmFwBVY/ol92TeetcDL89qgtIjzo4kLk2vzXm7Ui1eKdeW",
+        "hashedCode": "$2b$10$PB9n4uY2MGwSVULfLoxoauEc/3QFmPhlC.ROR3Z6UHp4sCYaxQbRe",
         "used": false
       },
       {
-        "hashedCode": "$2b$10$.HN5mkQP8edhJSQ8smKF7On5.mbARDz93oIOp.9XOnLexl0HrLdLO",
+        "hashedCode": "$2b$10$dMyNufSGgaVGH4Z6ZH54NuWDTtBHAgMIRW0B/o/XxgybL5NO90vK.",
         "used": false
       },
       {
-        "hashedCode": "$2b$10$7REmp3pjua.1Rqb3kRRlBeTqcWPGnk/xEEM4pkHFju8e4DG1cNMUG",
+        "hashedCode": "$2b$10$RkCwbkqsc.GH7f08qeBdIOY/bsY0s/ayVQVp01gPkoLil0A7ottsK",
         "used": false
       },
       {
-        "hashedCode": "$2b$10$fXfc6i1/3vah8VZmozfL2e4YygyfESbEbAVnEdyA82/5s6IeqOpKu",
+        "hashedCode": "$2b$10$xSLF484oPZ4pOPTpgF8lg.4BETAtxkyFKn02iYxmpQgXijosxg4zi",
         "used": false
       },
       {
-        "hashedCode": "$2b$10$uO6H71gEpB/iuhsXJafKJO1OjJudmtCrXK/zTRvJrDcrfDMgd3MXC",
+        "hashedCode": "$2b$10$XMdVG5fikQcrlx2Kh2DEkOJhKcc/5cKyQCdURC6/D8cc9yH9z8Diy",
         "used": false
       }
     ],
-    "createdAt": "2026-02-17T11:21:02.466Z",
+    "createdAt": "2026-02-17T15:26:30.121Z",
     "accountLockedUntil": null,
     "failedLoginAttempts": 0
-  },
-  {
-    "id": "user-aafd3c30-84b4-4d92-a074-31ae6a9ccae4",
-    "username": "musila",
-    "password": "$2b$10$KfVoIjumHhuA/rv9JN93PuToCyocTbq/xdnKpwPMurBk7vRHbjxH2",
-    "role": "receptionist",
-    "name": "Kelvin Maingi Musila",
-    "isAdmin": false,
-    "recoveryCodes": [
-      {
-        "hashedCode": "$2b$10$pSoXCqOIPYgNzAlwpqhRRe4Ln.V5KCM8T47aQO43ZiGx28C2WCghK",
-        "used": false
-      },
-      {
-        "hashedCode": "$2b$10$dE/F.54XnWgRmzRKGMrKbu4fuHwVBzyp1r.RM8jZuwuooEExdsAuO",
-        "used": false
-      },
-      {
-        "hashedCode": "$2b$10$Lf4ljY1mDz6UzUVEAu5CY.PIayJYL6Vo03WPMpvBUkIe0LslMNEk.",
-        "used": false
-      },
-      {
-        "hashedCode": "$2b$10$50Vtu0ldiQMbeUvoxkN7CuFlwmBNmHIj9n66iZNe85k8sKIVzlM1K",
-        "used": false
-      },
-      {
-        "hashedCode": "$2b$10$NHJxRUS.ERndvNCGgMki4OqZ1NmgworH6at2pKlj6F75yPsCQ/xH2",
-        "used": false
-      }
-    ],
-    "createdAt": "2026-02-17T11:22:14.045Z",
-    "accountLockedUntil": null,
-    "failedLoginAttempts": 0
-  },
-  {
-    "id": "user-f9a93e62-5882-44b1-8d1a-277a44763328",
-    "username": "kmusila1",
-    "password": "$2b$10$gm3o/MnXlmKLbb4Gd/VrVe3FC.OfSbugA44rpEMuBEu5ijTQkWdG6",
-    "role": "housekeeper",
-    "name": "mmm",
-    "isAdmin": false,
-    "recoveryCodes": [
-      {
-        "hashedCode": "$2b$10$7WkTw8yk0/Q7uKC4yKOyNOAXjzwymNbs1uo0EMThKCy7wK2JyauM2",
-        "used": false
-      },
-      {
-        "hashedCode": "$2b$10$/Zyy9V0oPsRC4qs9oh.E4ODraUFwIVFkD157yrWKHAMhNxotIRS5y",
-        "used": false
-      },
-      {
-        "hashedCode": "$2b$10$JycNrj6XAkinpxpsbrNhrO1ZjYxEAYqX4w6iR22sl4O4Y4sEVqMCe",
-        "used": false
-      },
-      {
-        "hashedCode": "$2b$10$vtD2zcJGOxakvLhO9LZlH.FHIHdlHzsUGf5i3/QfAolfGG1FwubcO",
-        "used": false
-      },
-      {
-        "hashedCode": "$2b$10$vuZUveZkUvAjbMtOwq2BO.Trfu5EFAbxg3zYhaJN4QB35J5EDsv8i",
-        "used": false
-      }
-    ],
-    "createdAt": "2026-02-17T11:22:55.145Z",
-    "accountLockedUntil": null,
-    "failedLoginAttempts": 0,
-    "isActive": true,
-    "lastStatusChange": "2026-02-17T11:23:23.232Z"
-  },
-  {
-    "id": "user-639ada24-9866-4939-89c6-c85b8d2bd83b",
-    "username": "benita",
-    "password": "$2b$10$.P.ZmHhHZcK2iHhS.y9p2eumeDhwrLGyQlpY2IUv1Hj9Aq.C9hPhG",
-    "role": "housekeeper",
-    "name": "netey",
-    "isAdmin": false,
-    "recoveryCodes": [
-      {
-        "hashedCode": "$2b$10$LEIfEtpYHcNUW/Omy10YuO3zEJ5UYmjiK2soZ8zKHXJiU7Htuzpm6",
-        "used": false
-      },
-      {
-        "hashedCode": "$2b$10$huq54dEEZtUZjW3tuNhcNuhqf80SGzbqixxIo56VNKLX/QNTA6/wu",
-        "used": false
-      },
-      {
-        "hashedCode": "$2b$10$eUf44XCp062wbazlvv3r..lah8NgLtF0JgVV/U9h4gQmwsY39JeOW",
-        "used": false
-      },
-      {
-        "hashedCode": "$2b$10$kha6byLYG.wWeaIQmYWbM./NmLtcDsOClYeyyDLX7dxIq1z5FhqRa",
-        "used": false
-      },
-      {
-        "hashedCode": "$2b$10$lFJ27ev58V.mlKXkZDnX3eHUMa.cSEa26K788x9JrWQIm0knKsh4i",
-        "used": false
-      }
-    ],
-    "createdAt": "2026-02-17T11:24:10.316Z",
-    "accountLockedUntil": null,
-    "failedLoginAttempts": 0,
-    "isActive": true,
-    "lastStatusChange": "2026-02-17T11:24:22.547Z"
-  },
-  {
-    "id": "user-607f3574-14f1-4ad1-aa07-c2b8b07bdbdc",
-    "username": "steve",
-    "password": "$2b$10$1HknzSvymrJBO7ngurIJU.Oyl3N1Cqa.HaLarFc2pUfjfNXanYR02",
-    "role": "housekeeper",
-    "name": "vo",
-    "isAdmin": false,
-    "recoveryCodes": [
-      {
-        "hashedCode": "$2b$10$7hE20KfWRRiZU4jYgygw9OlD0juvFJWlNRbPMu7TpHdjvdfX3izRy",
-        "used": false
-      },
-      {
-        "hashedCode": "$2b$10$ST02.OpLUYO153exAxSX9ujN4Ps.JcPhfaiOwZQVcgPwikAGUSX1i",
-        "used": false
-      },
-      {
-        "hashedCode": "$2b$10$vuaqzpPDl9DAtpLbeWaKd.4QPnrNzpd2sOY/uHSjyPs0TwVMu8NuG",
-        "used": false
-      },
-      {
-        "hashedCode": "$2b$10$vstwSecHvhhwQEfuvSqcKeFK1wB2Xj9drsMSOayFXb/CdyENfRAOe",
-        "used": false
-      },
-      {
-        "hashedCode": "$2b$10$6k2q5GSP.1oDS7B2VdHhpecx3VmAPHxyg96lJW3GJ1.at0TTOMtQa",
-        "used": false
-      }
-    ],
-    "createdAt": "2026-02-17T11:24:47.268Z",
-    "accountLockedUntil": null,
-    "failedLoginAttempts": 0,
-    "isActive": true,
-    "lastStatusChange": "2026-02-17T11:49:48.267Z"
   }
 ]

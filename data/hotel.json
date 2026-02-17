@@ -1,21 +1,13 @@
 {
-  "id": "hotel-d7fcba66-0abc-4478-8c70-add22469a17c",
-  "name": "Ramada Hotel",
+  "id": "hotel-88577284-fed0-4fc6-bced-16f628b972cc",
+  "name": "Qwetu Hostel",
   "roomTypes": [
     {
       "name": "single",
-      "count": 10
-    },
-    {
-      "name": "twin",
-      "count": 10
-    },
-    {
-      "name": "premium",
-      "count": 10
+      "count": 100
     }
   ],
-  "createdBy": "user-55758027-0a28-4ff6-bc54-1a47130dac77",
-  "createdAt": "2026-02-17T11:21:02.470Z",
-  "updatedAt": "2026-02-17T11:21:02.470Z"
+  "createdBy": "user-3d008eac-c62f-4377-b544-a1fef73f0143",
+  "createdAt": "2026-02-17T15:26:30.126Z",
+  "updatedAt": "2026-02-17T15:26:30.126Z"
 }

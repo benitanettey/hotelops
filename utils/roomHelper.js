@@ -33,7 +33,6 @@ function generateRooms(roomTypes) {
         id: `room-${uuidv4()}`,
         roomNumber: roomNumber,
         type: type.name,
-        floor: floor,
         status: 'Available', // Available, Occupied, Cleaning, Maintenance
         guestId: null,
         guestName: null,
@@ -127,23 +126,19 @@ function getRoomTypeSummary(rooms) {
  * @returns {Array} Combined rooms array
  */
 function addRooms(existingRooms, newRoomTypes) {
-  // Find the highest floor and room number
-  let maxFloor = 1;
-  let maxRoomOnFloor = {};
-
+  // Find the highest room number to continue from
+  let maxRoomNum = 0;
   existingRooms.forEach(room => {
-    const floor = room.floor;
-    if (floor > maxFloor) maxFloor = floor;
-    
-    if (!maxRoomOnFloor[floor]) maxRoomOnFloor[floor] = 0;
-    const roomNum = parseInt(room.roomNumber.slice(-2));
-    if (roomNum > maxRoomOnFloor[floor]) maxRoomOnFloor[floor] = roomNum;
+    const roomNum = parseInt(room.roomNumber) || 0;
+    if (roomNum > maxRoomNum) maxRoomNum = roomNum;
   });
+  
+  // Determine starting floor and position
+  let currentFloor = Math.floor(maxRoomNum / 100) || 1;
+  let roomsOnFloor = maxRoomNum % 100;
+  const maxRoomsPerFloor = 10;
 
   const newRooms = [];
-  let currentFloor = maxFloor;
-  let roomsOnFloor = maxRoomOnFloor[currentFloor] || 0;
-  const maxRoomsPerFloor = 10;
 
   newRoomTypes.forEach(type => {
     const count = parseInt(type.count) || 0;
@@ -162,7 +157,6 @@ function addRooms(existingRooms, newRoomTypes) {
         id: `room-${uuidv4()}`,
         roomNumber: roomNumber,
         type: type.name,
-        floor: currentFloor,
         status: 'Available',
         guestId: null,
         guestName: null,
