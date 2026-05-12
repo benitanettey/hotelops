@@ -1,5 +1,5 @@
 const bcrypt = require('bcrypt');
-const { v4: uuidv4 } = require('uuid');
+const { randomUUID } = require('crypto');
 const path = require('path');
 const { readJSON, writeJSON } = require('../utils/jsonHelper');
 const { getDashboardPath } = require('../utils/roleHelper');
@@ -129,7 +129,7 @@ exports.processSignup = async (req, res) => {
     
     // Create new user
     const newUser = {
-      id: `user-${uuidv4()}`,
+      id: `user-${randomUUID()}`,
       username: username.toLowerCase().trim(),
       password: hashedPassword,
       role: role,
@@ -149,7 +149,7 @@ exports.processSignup = async (req, res) => {
     if (!hotelConfigured && role === 'receptionist') {
       // Create hotel configuration
       const newHotel = {
-        id: `hotel-${uuidv4()}`,
+        id: `hotel-${randomUUID()}`,
         name: hotelName.trim(),
         roomTypes: roomTypes.filter(rt => parseInt(rt.count) > 0).map(rt => ({
           name: rt.name,
@@ -462,7 +462,7 @@ exports.processForgotPassword = async (req, res) => {
     try {
       const logs = await readJSON(RESET_LOGS_FILE);
       logs.push({
-        id: `log-${uuidv4()}`,
+        id: `log-${randomUUID()}`,
         timestamp: new Date().toISOString(),
         targetUser: {
           userId: user.id,

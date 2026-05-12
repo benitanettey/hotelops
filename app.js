@@ -8,6 +8,9 @@ const app = express();
 
 // ================= MIDDLEWARE =================
 
+// Trust reverse proxy headers (required for secure cookies on Vercel/HTTPS proxies)
+app.set('trust proxy', 1);
+
 // Body parser
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -85,7 +88,7 @@ app.use('/housekeeping', housekeepingRoutes);
 
 // ================= SERVER =================
 
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);

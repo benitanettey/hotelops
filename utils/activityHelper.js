@@ -4,7 +4,7 @@
  */
 
 const path = require('path');
-const { v4: uuidv4 } = require('uuid');
+const { randomUUID } = require('crypto');
 const { readJSON, writeJSON } = require('./jsonHelper');
 
 const ACTIVITY_FILE = path.join(__dirname, '../data/activity.json');
@@ -38,7 +38,7 @@ async function logActivity({ type, description, details, userId, userName, hotel
     const activities = await readJSON(ACTIVITY_FILE) || [];
     
     const activity = {
-      id: `activity-${uuidv4()}`,
+      id: `activity-${randomUUID()}`,
       type,
       description,
       details,

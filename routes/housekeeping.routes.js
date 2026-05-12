@@ -3,7 +3,6 @@
 const express = require('express');
 const router = express.Router();
 const path = require('path');
-const { v4: uuidv4 } = require('uuid');
 const { requireAuth } = require('../middleware/auth.middleware');
 const { requireHousekeeper } = require('../middleware/role.middleware');
 const { readJSON, writeJSON } = require('../utils/jsonHelper');

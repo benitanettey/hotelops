@@ -2,7 +2,7 @@
  * Room Helper Utility
  * Handles room generation and management logic
  */
-const { v4: uuidv4 } = require('uuid');
+const { randomUUID } = require('crypto');
 
 /**
  * Generate rooms based on room type configuration
@@ -30,7 +30,7 @@ function generateRooms(roomTypes) {
       const roomNumber = `${floor}${roomNumberOnFloor}`;
 
       rooms.push({
-        id: `room-${uuidv4()}`,
+        id: `room-${randomUUID()}`,
         roomNumber: roomNumber,
         type: type.name,
         status: 'Available', // Available, Occupied, Cleaning, Maintenance
@@ -154,7 +154,7 @@ function addRooms(existingRooms, newRoomTypes) {
       const roomNumber = `${currentFloor}${roomNumberOnFloor}`;
 
       newRooms.push({
-        id: `room-${uuidv4()}`,
+        id: `room-${randomUUID()}`,
         roomNumber: roomNumber,
         type: type.name,
         status: 'Available',

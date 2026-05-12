@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
 const path = require('path');
-const { v4: uuidv4 } = require('uuid');
+const { randomUUID } = require('crypto');
 const { requireAuth } = require('../middleware/auth.middleware');
 const { requireReceptionist, requireAdmin, checkAdmin } = require('../middleware/role.middleware');
 const { readJSON, writeJSON } = require('../utils/jsonHelper');
@@ -208,7 +208,7 @@ router.post('/checkin', async (req, res) => {
     
     // Create new guest record
     const newGuest = {
-      id: `guest-${uuidv4()}`,
+      id: `guest-${randomUUID()}`,
       firstName,
       lastName,
       fullName: guestName,
@@ -430,7 +430,7 @@ router.post('/checkout', async (req, res) => {
     
     // Create cleaning task with auto-assignment
     const cleaningTask = {
-      id: `task-${uuidv4()}`,
+      id: `task-${randomUUID()}`,
       roomId: rooms[roomIndex].id,
       roomNumber,
       serviceType: 'Checkout Cleaning',
@@ -556,7 +556,7 @@ router.post('/cleaning-requests', async (req, res) => {
     
     // Create new cleaning task
     const newTask = {
-      id: uuidv4(),
+      id: randomUUID(),
       roomNumber: roomNumber || null,
       location: location || null,
       serviceType: 'Standard Cleaning',
